@@ -20,12 +20,18 @@ Unique features (we can choose):
 - Categorized job listings for internships and part-time work. 
   . For every company we’d hire people who’ve worked at that company who would offer training to anyone who wants to apply for the company.
 
-5.) Poteintal PL for creation: 
+5.) FrameWorks and Programming Languages (PL) 
+           
+           Connection 1             Connection 2
+Database <------------> Back-end  <------------> Front-end
+ (1)                      (2)                      (3) 
 
 - Website
-    . MySql/PostgreSQL  = database 
-    . Database-Backend Connection:  ORM - Object-Relational Mapping via SQLAlchemy using Flask
-    . Flask = Backend (Server-Side).
-    . Backend-Frontend Connection: AJAX or Fetch API
-    . HTML/CSS/JS = Frontend (Client-Side). 
+    . Database: >> |Tool: MySql or PostgreSQL| <> |PL: SQL|
+    . Connection 1: (Database-Backend):  >> |FrameWork: SQLAlchemy| <> |PL: Python|
+    . Back-end (Server-side): >> |FrameWork: Flask| <> |PL: Python|
+    . Connection 2 (Backend-Frontend): >> |Framework: AJAX or Fetch API| <> |PL: JavaScript|
+    . Front-end (Client-Side): >> |Framework: Jinja2 or Bootstrap| <> |PL: HTML or CSS or JS| 
+
+- Side notes Connection 1 uses ORM - Object-Relational Mapping to make it easier to connect Database
 
