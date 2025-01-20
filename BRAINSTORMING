@@ -1,22 +1,31 @@
 IDEA: 
 
-1.) JOB POSTING Website  
+1.) Software Deveolpment Projectl JOB POSTING Website  
 2.) Helpful YT series: https://www.youtube.com/watch?v=mqhxxeeTbu0&list=PLzMcBGfZo4-n4vJJybUVV3Un_NFS5EOgX&ab_channel=TechWithTim
 
 3.) 
 
-Job Posting Website Ideas: 
-
--For every job there would be a set of skills and that we’d provide sources that are credible and reviewed by us for all of the skills.
--For every company we’d hire people who’ve worked at that company who would offer training to anyone who wants to apply for the company.
+Job Posting Website Ideas: n/a
 
 4.) Basic Layout of website:
 
--Simple job posting and search system. (Basic) 
+- Simple job posting and search system. (Basic) 
 
 Unique features (we can choose): 
 
--Basic student profile creation.
--Job alerts based on student preferences.
--A basic resume builder.
--Categorized job listings for internships and part-time work.
+- Basic student profile creation.
+- Job alerts based on student preferences.
+  . For every job there would be a set of skills and that we’d provide sources that are credible and reviewed by us for all of the skills.
+- A basic resume builder.
+- Categorized job listings for internships and part-time work. 
+  . For every company we’d hire people who’ve worked at that company who would offer training to anyone who wants to apply for the company.
+
+5.) Poteintal PL for creation: 
+
+- Website
+    . MySql/PostgreSQL  = database 
+    . Database-Backend Connection:  ORM - Object-Relational Mapping via SQLAlchemy using Flask
+    . Flask = Backend (Server-Side).
+    . Backend-Frontend Connection: AJAX or Fetch API
+    . HTML/CSS/JS = Frontend (Client-Side). 
+
