@@ -5,20 +5,28 @@ IDEA:
 
 3.) 
 
-Job Posting Website Ideas: n/a
+Job Posting Website Ideas: (Some starter features)
+- Effective Connection with Mentors
+- Filter job application
+- Available to keep track of job application
+- Give suggestions on resume and cover letter creation
+- Get access to internships and entry-level jobs
+- Company rankings for verified incorporations
 
 4.) Basic Layout of website:
 
-- Simple job posting and search system. (Basic) 
+- Simple job posting and search system -> Focused on new-grads and students trying to launch their careers. Efficient filtering for different
+  job types
 
 Unique features (we can choose): 
 
-- Basic student profile creation.
+- Basic student profile creation. -> Allow in attaching files, connecting with others and getting job recommendations 
 - Job alerts based on student preferences.
   . For every job there would be a set of skills and that we’d provide sources that are credible and reviewed by us for all of the skills.
 - A basic resume builder.
 - Categorized job listings for internships and part-time work. 
   . For every company we’d hire people who’ve worked at that company who would offer training to anyone who wants to apply for the company.
+  . These mentors will help develop the needed skills, allow in effective connections and launch their careers in the industry 
 
 5.) FrameWorks and Programming Languages (PL) 
            
