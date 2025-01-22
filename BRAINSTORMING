@@ -1,2 +1,13 @@
 Brainstorming v2
 
+
+          Connection 1             Connection 2
+Database <------------> Back-end  <------------> Front-end
+(1)                      (2)                      (3) 
+
+- Website/APP
+    . Database: >> |Tool: MySql or PostgreSQL| <> |PL: SQL|
+    . Connection 1: (Database-Backend):  >> |FrameWork: SQLAlchemy| <> |PL: Python|
+    . Back-end (Server-side): >> |FrameWork: Flask| <> |PL: Python|
+    . Connection 2 (Backend-Frontend): >> |Framework: AJAX or Fetch API| <> |PL: JavaScript|
+    . Front-end (Client-Side): >> |Framework: Jinja2 or Bootstrap| <> |PL: HTML or CSS or JS| 
