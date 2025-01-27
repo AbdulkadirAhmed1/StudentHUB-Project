@@ -1,10 +1,14 @@
-# EECS2311Workshop
+# Software Development Project
 
-### LE/EECS 2311 X - Software Development Project (Winter 2024-2025).  For Team Members Only  
+____________________________________________________________________________________________________________________________________________________________________________________________
 
 ## Project: StudentHUB-Project
 
-## Members: 
+## Brief Description: *The purpose of this project is to create a centralized platform tailored for university students to simplify organization, scheduling, peer collaboration, and access to academic resources. By addressing common challenges students face, the platform aims to provide an all-in-one solution that improves efficiency and enhances the university experience.*
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+### Members: 
 
  - *Abdulkadir Ahmed (the coder)*
  - *Digvijaysinh Vaghela*
