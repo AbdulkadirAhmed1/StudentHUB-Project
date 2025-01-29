@@ -6,4 +6,5 @@ Group Tak about Project Proposal, ITR0 talks and user stories for the project. D
 Meeting 1: Monday Jan 27
 New Team formation and ITR0 Talk about gettting client interview and finishing up ITR0. Assigning all costs and priorities to user stories and a breakdown fo assignments to group members
 
-
+Meeting 2: Wednesday Jan 29
+Complete talk about finishing up edits and planning for ITR0 before submission. Starting to talk about ITR1 implementation, tech stack and appropriate GUI to begin coding
