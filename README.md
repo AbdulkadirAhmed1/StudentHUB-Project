@@ -1,12 +1,12 @@
 # Software Development Project
 
-## Project: StudentHUB-Project
+# Project: StudentHUB-Project
 
-## Brief Description: 
+# Brief Description: 
 
 ### The purpose of this project is to create a centralized platform tailored for university students to simplify organization, scheduling, peer collaboration, and access to academic resources. By addressing common challenges students face, the platform aims to provide an all-in-one solution that improves efficiency and enhances the university experience.
 
-## Members: 
+# Members: 
 
  - *Abdulkadir Ahmed (the coder)*
  - *Digvijaysinh Vaghela*
