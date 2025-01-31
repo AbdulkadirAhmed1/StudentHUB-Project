@@ -12,3 +12,5 @@
  - *Digvijaysinh Vaghela*
  - *Daksh Patel*
  - *Mohsen Maoodhah (aka the handsome guy)*
+ - Fardad Rashidian
+ - Sandeepon Saha
