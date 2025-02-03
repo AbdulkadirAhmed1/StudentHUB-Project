@@ -79,14 +79,6 @@
      - **Advising** tab shows "Welcome to the Academic Advising!"
      - **Group Chat** tab shows "Welcome to the Student Group Chat!"
 
-5. **Visuals**:  
-   - **Group Chat Page**:  
-     ![Group Chat Page](https://i.imgur.com/aIFErUD.jpeg)
-   - **Advising Page**:  
-     ![Advising Page](https://i.imgur.com/qOgUtI5.jpeg)
-   - **Website look (optional)**:  
-     ![Website Look](https://i.imgur.com/onXGd0A.png)
-
 ---
 
 ## Next Steps:
