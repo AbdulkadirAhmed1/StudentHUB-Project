@@ -25,14 +25,14 @@ export default function TabLayout() {
           default: {},
         }),
       }}>
-     *<Tabs.Screen
+      *<Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
         }}
       />
-       {/*<Tabs.Screen
+      {/*<Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
@@ -41,9 +41,25 @@ export default function TabLayout() {
       />/*}
       {/* Add the new Blank Screen Tab */}
       <Tabs.Screen
-        name="calendar"  // Change 'blank' to 'calendar'
+        name="calendar"
         options={{
           title: 'Calendar',  // Change the title to 'Calendar'
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
+        }}
+      />
+
+      <Tabs.Screen
+        name="advising"
+        options={{
+          title: 'Advising',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
+        }}
+      />
+
+      <Tabs.Screen
+        name="groupchat"
+        options={{
+          title: 'Group Chat',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
         }}
       />
