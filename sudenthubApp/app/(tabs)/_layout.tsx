@@ -19,48 +19,55 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
+          web: {
+            display: 'none'
+          },
           ios: {
             position: 'absolute',
+            bottom: 0, // Default behavior for iOS
+            backgroundColor: 'black',
           },
-          default: {},
+          default: {
+            position: 'absolute',
+            bottom: 0, // Default for other platforms
+            backgroundColor: 'black',
+          },
         }),
-      }}>
-      *<Tabs.Screen
+      }}
+    >
+      <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      {/*<Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
-        }}
-      />/*}
-      {/* Add the new Blank Screen Tab */}
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Calendar',  // Change the title to 'Calendar'
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
+          title: 'Calendar',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
         }}
       />
-
       <Tabs.Screen
         name="advising"
         options={{
           title: 'Advising',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
-
       <Tabs.Screen
         name="groupchat"
         options={{
           title: 'Group Chat',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />  // Use the 'calendar' icon or whatever you prefer
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="message" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="signup"
+        options={{
+          title: 'Login',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="lock.fill" color={color} />,
         }}
       />
     </Tabs>
