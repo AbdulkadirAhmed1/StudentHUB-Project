@@ -44,9 +44,34 @@
 
 ---
 
+### Log 1.3 2/5/2025
+
+- **Website Navigation Bar**:
+  - Designed and implemented a custom **Navigation Bar** for the website (web platform only).
+  - Added a **logo** to the left of the navigation bar.
+  - Styled **tabs** for Home, Calendar, Advising, Group Chat, and Login on the right side.
+  - Verified proper navigation using `expo-router` with `Link`.
+
+  - **Website Screenshot**:  
+    ![Website Navigation Bar](https://i.imgur.com/Q7FEQmU.png)
+
+- **Mobile Navigation Bar**:
+  - Kept the navigation tabs at the bottom for mobile apps.
+  - Verified the tab functionality for Home, Calendar, Advising, Group Chat, and Login.
+  - Verified icons display correctly in the tab navigation.
+
+  - **Mobile App Screenshot**:  
+    ![Mobile Navigation Bar](https://i.imgur.com/uO2fC85.jpeg)
+
+- **New Page Added**:
+  - Added the **Login Page** (`signup.tsx`): Displays the text: "Redirecting..."
+  - Integrated the Login tab into both the website and mobile app.
+
+---
+
 ## Reproduction Steps:
 
-### Log 1.2 2/3/2025
+### Log 1.3 2/5/2025
 
 1. **Clone the Repository**:
    - Clone the project using Git:  
@@ -71,22 +96,29 @@
      - Text: "Welcome to the Academic Advising!"
    - **Group Chat Page** (`groupchat.tsx`):  
      - Text: "Welcome to the Student Group Chat!"
+   - **Login Page** (`signup.tsx`):  
+     - Text: "Redirecting..."
 
 4. **Tab Setup**:
-   - Created tabs using **expo-router**: Home, Calendar, Advising, and Group Chat.
+   - Created tabs using **expo-router**: Home, Calendar, Advising, Group Chat, and Login.
      - **Home** tab shows "Welcome to STUDENT-HUB App!"
      - **Calendar** tab shows "Welcome to the Calendar!"
      - **Advising** tab shows "Welcome to the Academic Advising!"
      - **Group Chat** tab shows "Welcome to the Student Group Chat!"
+     - **Login** tab shows "Redirecting..."
+
+5. **Navigation Bar**:
+   - Custom **NavigationBar.tsx** added for the web platform.
+   - Tabs are functional and route to their respective pages.
 
 ---
 
 ## Next Steps:
 
-### Log 1.2 2/3/2025
+- **Styling Enhancements**:
+  - Ensure consistency in styles across both mobile and web platforms.
+  - Add icons for all tabs on mobile for better UX.
 
-- **To Test**:
-   - Open the app on Expo Go or in a browser.
-   - Confirm all tabs (Home, Calendar, Advising, and Group Chat) load correctly.
-   - Verify that the text matches the updates mentioned above.
-   - Ensure the buttons for **Advising** and **Group Chat** work and display the correct pages.
+- **Testing**:
+  - Verify navigation works seamlessly on all platforms.
+  - Conduct UI tests for both web and mobile platforms.
