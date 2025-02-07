@@ -67,11 +67,29 @@
   - Added the **Login Page** (`signup.tsx`): Displays the text: "Redirecting..."
   - Integrated the Login tab into both the website and mobile app.
 
+- **APK Addition**:
+  - Added an `.apk` file for v1.3 to the project directory.  
+  - **Note**: The APK is compatible with **Android devices only** and downloading it on other platforms will not launch the app.
+  
+---
+
+### Log 1.3.1 2/7/2025
+
+- **Mobile Navigation Enhancements**:
+  - Added **icons** for the following tabs in the mobile app (Android):
+    - **Calendar**
+    - **Advising**
+    - **Group Chat**
+    - **Login**
+  - Ensured icons render properly on Android devices.  
+    - **Screenshot**:  
+      ![Updated Mobile Navigation](https://i.imgur.com/l8cXLsn.png)
+
 ---
 
 ## Reproduction Steps:
 
-### Log 1.3 2/5/2025
+### Log 1.3.1 2/7/2025
 
 1. **Clone the Repository**:
    - Clone the project using Git:  
@@ -87,7 +105,7 @@
      ```
    - Scan the QR code with the **Expo Go** app on your mobile device or open the app in the browser.
 
-3. **Changes Made**:  
+3. **Changes Made**:
    - **Home Page** (`index.tsx`):  
      - Text: "Welcome to STUDENT-HUB App!"
    - **Calendar Page** (`calendar.tsx`):  
@@ -111,14 +129,21 @@
    - Custom **NavigationBar.tsx** added for the web platform.
    - Tabs are functional and route to their respective pages.
 
----
+--
 
 ## Next Steps:
 
 - **Styling Enhancements**:
   - Ensure consistency in styles across both mobile and web platforms.
-  - Add icons for all tabs on mobile for better UX.
+  - Improve the visual design of the navigation bar for a cleaner and more professional look.
+  - Verify that icons and text are correctly aligned across devices.
 
 - **Testing**:
   - Verify navigation works seamlessly on all platforms.
   - Conduct UI tests for both web and mobile platforms.
+  - Ensure that tab icons render correctly across different devices.
+
+- **APK Distribution**:
+  - Test the `.apk` on various Android devices to confirm stability.
+  - Optimize the APK size for better performance.
+  - Plan for future deployments and app store submission.
