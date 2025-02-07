@@ -1,5 +1,23 @@
 # Project: StudentHUB
 
+## Author of Logs
+
+✨ Documented and Verified with Excellence ✨
+### Author: Abdulkadir Ahmed (henceforth referred to as The Architect)
+
+📜 Every log, update, and piece of documentation in this project has been meticulously crafted, rigorously reviewed, and proudly maintained by The Architect. These logs are more than just records—they symbolize countless hours of innovation, dedication, and refinement.
+
+🌟 Acknowledgments:
+
+🛠️ The Architect has devoted significant time and energy to ensure each detail is precise, clear, and impactful.
+🔍 Behind every log is a commitment to achieving the highest standards of quality and professionalism.
+💡 This documentation isn’t merely a summary—it’s a testament to the relentless hard work and passion poured into every phase of this project.
+⚖️ Copyright and Ownership:
+
+🚨 This documentation is the exclusive intellectual property of The Architect. Unauthorized copying, redistribution, or misrepresentation of this work as your own is both unethical and a disservice to the immense dedication that brought it to life.
+
+🙏 Please respect the effort, the time, and the ingenuity behind this work. Every keystroke tells a story of perseverance and creativity. 🚀
+
 ## Logs 
 
 ### Log 1.1 1/31/2025
