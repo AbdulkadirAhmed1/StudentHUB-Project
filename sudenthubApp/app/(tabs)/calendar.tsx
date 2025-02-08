@@ -1,6 +1,6 @@
 // calendar.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 export default function CalendarScreen() {
   return (
@@ -21,6 +21,9 @@ export default function CalendarScreen() {
       </View>
     </View>
    </View>
+   <TouchableOpacity style={styles.addButton}>
+    <Text style={styles.buttonText}>+ Add Course</Text>
+   </TouchableOpacity>
   </View>
   );
 }
@@ -91,5 +94,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     height: '80%',
     marginHorizontal: 5,
+  },
+
+  addButton: {
+    backgroundColor: 'lightblue',
+    position: 'absolute',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    bottom: 85,
+    alignSelf: 'center',
+  },
+
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
