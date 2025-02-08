@@ -15,7 +15,9 @@ export default function CalendarScreen() {
         {/* Calender Content */}
         <View style={styles.calendarContent}>
       <View style={styles.header}>
-        {[ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day,index) => (<Text key={index} style={styles.day}>{day}</Text>))}
+        {[ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day,index) => (<View key={index} style={styles.dayContainer}>
+          <Text key={index} style={styles.day}>{day}</Text>{index < 4 && <View style={styles.separator} />} 
+          </View>))}
       </View>
     </View>
    </View>
@@ -30,13 +32,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     paddingTop: 50,
+    width: '100%',
   },
   heading: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    paddingVertical: 10,
-    marginBottom: 20,
-    textAlignVertical: 'center',
+    marginBottom: 10,
+    textAlign: 'center',
+    width: '100%',
+    alignSelf: 'center',
+    marginTop: 20,
+    position: 'absolute',
+    top: 10,
+  
   },
   header: {
     flexDirection: 'row',
@@ -44,6 +52,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10,
     backgroundColor: 'lightblue',
+    alignSelf: 'flex-start',
   },
   day: {
     fontSize: 15,
@@ -69,5 +78,18 @@ const styles = StyleSheet.create({
   calendarContent: {
     flexDirection: 'row',
     flex: 1,
+  },
+  dayContainer: {
+     flexDirection: 'row', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      flex: 1,
+    
+  },
+  separator: {
+    width: 1,
+    backgroundColor: 'black',
+    height: '80%',
+    marginHorizontal: 5,
   },
 });
