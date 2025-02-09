@@ -10,8 +10,12 @@
 🌟 Acknowledgments:
 
 🛠️ The Architect has devoted significant time and energy to ensure each detail is precise, clear, and impactful.
-🔍 Behind every log is a commitment to achieving the highest standards of quality and professionalism.
-💡 This documentation isn’t merely a summary—it’s a testament to the relentless hard work and passion poured into every phase of this project.
+
+🤝 Team Collaboration: While The Architect oversees and verifies all entries, contributions from team members are always acknowledged with gratitude.
+🔍 Commitment to Quality: Behind every log is a commitment to achieving the highest standards of quality and professionalism.
+📌 Contributor Recognition: For collaborative efforts, the name(s) of the contributor(s) are explicitly mentioned in the relevant log entries.
+📖 A Living Document: This documentation isn’t merely a summary—it’s a testament to the relentless hard work and passion poured into every phase of this project.
+
 ⚖️ Copyright and Ownership:
 
 🚨 This documentation is the exclusive intellectual property of The Architect. Unauthorized copying, redistribution, or misrepresentation of this work as your own is both unethical and a disservice to the immense dedication that brought it to life.
@@ -110,10 +114,11 @@
 - **Calendar Frontend Update**:
   - Added significant enhancements to the **Calendar** tab:
     - Designed a new time-slot system for better schedule visualization.
-    - Introduced a "Add Course" button at the bottom for ease of use.
+    - Introduced a "+ Add Course" button at the bottom for ease of use.
     - Improved header design with day labels: **Mon**, **Tue**, **Wed**, **Thu**, and **Fri**.
     - Styled the calendar for a clean, user-friendly interface.
   - Verified functionality and design consistency across devices.
+  - **Contribution Note**: This update was implemented by Daksh Patel, with verification and documentation by The     Architect.
 
   - **Screenshot of Updated Calendar**:  
     ![Calendar Tab Update](https://i.imgur.com/8mX192c.png)
@@ -138,7 +143,7 @@
      ```
    - Scan the QR code with the **Expo Go** app on your mobile device or open the app in the browser.
 
-3. **Changes Made**:
+3. **Changes Made** _(Frontend Development by Daksh)_: 
    - **Calendar Page** (`calendar.tsx`):  
      - Added a redesigned header for day labels.
      - Implemented a time-slot system for daily schedules.
