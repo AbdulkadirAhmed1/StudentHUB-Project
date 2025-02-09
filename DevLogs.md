@@ -12,8 +12,11 @@
 🛠️ The Architect has devoted significant time and energy to ensure each detail is precise, clear, and impactful.
 
 🤝 Team Collaboration: While The Architect oversees and verifies all entries, contributions from team members are always acknowledged with gratitude.
+
 🔍 Commitment to Quality: Behind every log is a commitment to achieving the highest standards of quality and professionalism.
+
 📌 Contributor Recognition: For collaborative efforts, the name(s) of the contributor(s) are explicitly mentioned in the relevant log entries.
+
 📖 A Living Document: This documentation isn’t merely a summary—it’s a testament to the relentless hard work and passion poured into every phase of this project.
 
 ⚖️ Copyright and Ownership:
