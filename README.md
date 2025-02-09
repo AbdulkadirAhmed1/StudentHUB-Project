@@ -1,5 +1,3 @@
-# Software Development Project
-
 ### Project: StudentHUB
 
 ### Brief Description: 
