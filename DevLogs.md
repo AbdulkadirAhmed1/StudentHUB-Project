@@ -105,9 +105,24 @@
 
 ---
 
+### Log 1.4 2/8/2025
+
+- **Calendar Frontend Update**:
+  - Added significant enhancements to the **Calendar** tab:
+    - Designed a new time-slot system for better schedule visualization.
+    - Introduced a "Add Course" button at the bottom for ease of use.
+    - Improved header design with day labels: **Mon**, **Tue**, **Wed**, **Thu**, and **Fri**.
+    - Styled the calendar for a clean, user-friendly interface.
+  - Verified functionality and design consistency across devices.
+
+  - **Screenshot of Updated Calendar**:  
+    ![Calendar Tab Update](https://i.imgur.com/8mX192c.png)
+
+---
+
 ## Reproduction Steps:
 
-### Log 1.3.1 2/7/2025
+### Log 1.4 2/8/2025
 
 1. **Clone the Repository**:
    - Clone the project using Git:  
@@ -124,32 +139,52 @@
    - Scan the QR code with the **Expo Go** app on your mobile device or open the app in the browser.
 
 3. **Changes Made**:
-   - **Home Page** (`index.tsx`):  
-     - Text: "Welcome to STUDENT-HUB App!"
    - **Calendar Page** (`calendar.tsx`):  
-     - Text: "Welcome to the Calendar!"
-   - **Advising Page** (`advising.tsx`):  
-     - Text: "Welcome to the Academic Advising!"
-   - **Group Chat Page** (`groupchat.tsx`):  
-     - Text: "Welcome to the Student Group Chat!"
-   - **Login Page** (`signup.tsx`):  
-     - Text: "Redirecting..."
+     - Added a redesigned header for day labels.
+     - Implemented a time-slot system for daily schedules.
+     - Integrated a "Add Course" button.
+     - Styled the entire page for a better user experience.
 
 4. **Tab Setup**:
-   - Created tabs using **expo-router**: Home, Calendar, Advising, Group Chat, and Login.
-     - **Home** tab shows "Welcome to STUDENT-HUB App!"
-     - **Calendar** tab shows "Welcome to the Calendar!"
-     - **Advising** tab shows "Welcome to the Academic Advising!"
-     - **Group Chat** tab shows "Welcome to the Student Group Chat!"
-     - **Login** tab shows "Redirecting..."
+   - Tabs remain unchanged:
+     - **Calendar** tab now includes the updated design and features.
 
-5. **Navigation Bar**:
-   - Custom **NavigationBar.tsx** added for the web platform.
-   - Tabs are functional and route to their respective pages.
-
---
+---
 
 ## Next Steps:
+
+### Log 1.1 1/31/2025
+
+- **To Test**: 
+   - Open the app on Expo Go or in a browser.
+   - Confirm both tabs (Home and Calendar) load correctly.
+   - Verify that the text matches the updates mentioned above.
+
+### Log 1.2 2/3/2025
+
+- **To Test**:
+   - Open the app on Expo Go or in a browser.
+   - Confirm all tabs (Home, Calendar, Advising, and Group Chat) load correctly.
+   - Verify that the text matches the updates mentioned above.
+   - Ensure the buttons for **Advising** and **Group Chat** work and display the correct pages.
+
+### Log 1.3 2/3/2025
+
+- **Styling Enhancements**:
+  - Ensure consistency in styles across both mobile and web platforms.
+  - Add icons for all tabs on mobile for better UX.
+
+- **To Test**:
+   - Open the app on Expo Go or in a browser.
+   - Confirm all tabs (Home, Calendar, Advising, Group Chat and Login) load correctly.
+   - Verify that the text matches the updates mentioned above.
+   - Ensure the button for **Login** work and display the correct pages.
+
+- **Testing**:
+  - Verify navigation works seamlessly on all platforms.
+  - Conduct UI tests for both web and mobile platforms.
+
+### Log 1.3.1 2/7/2025
 
 - **Styling Enhancements**:
   - Ensure consistency in styles across both mobile and web platforms.
@@ -165,3 +200,22 @@
   - Test the `.apk` on various Android devices to confirm stability.
   - Optimize the APK size for better performance.
   - Plan for future deployments and app store submission.
+
+### Log 1.4 2/8/2025
+
+- **Backend Integration**:
+  - Begin setting up the backend for the calendar feature using **Node.js** and **Express.js**.
+  - Host the backend on **Render** and connect it to the frontend.
+
+- **Database Setup**:
+  - Collaboratively design and implement the **MongoDB** database schema with the team.
+  - Ensure seamless integration of backend APIs with the database and frontend.
+
+- **Testing**:
+  - Verify the "Add Course" button functionality after backend integration.
+  - Conduct UI and functionality tests for the updated calendar tab.
+  - Ensure cross-platform compatibility and performance.
+
+- **Future Releases**:
+  - Plan for the next pre-release with backend and database functionalities integrated.
+  - Finalize and optimize features for production readiness.
