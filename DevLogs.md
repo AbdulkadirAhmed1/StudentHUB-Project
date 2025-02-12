@@ -25,7 +25,7 @@
 
 🙏 Please respect the effort, the time, and the ingenuity behind this work. Every keystroke tells a story of perseverance and creativity. 🚀
 
-## Logs 
+## Logs (Log = Version i.e Log 1.2 = v1.2) 
 
 ### Log 1.1 1/31/2025
 
@@ -128,34 +128,65 @@
 
 ---
 
+### **Log 1.5 2/12/2025**  
+
+- **Academic Advising Feature Update**:  
+  - Enhanced the **Advising** tab with a structured prompt-based interaction system.  
+  - Users can now select from three advising prompts:  
+    - *"What courses should I take?"*  
+    - *"How do I drop a course?"*  
+    - *"When is the last day to enroll?"*  
+  - **Before (Blank Advising Page)**:  
+    ![Blank Advising Page](https://i.imgur.com/h0BfTLI.png)  
+  - **After (3 Prompts Added)**:  
+    ![Advising Page with Prompts](https://i.imgur.com/aETdVKa.png)  
+
+- **UI & UX Enhancements**:  
+  - Implemented **structured layout** for advising prompts.  
+  - Improved the user experience for smoother interactions.  
+
+- **Contribution Note**:  
+  - **Developed by**: Sandeepon Saha & Fardad Rashidian.  
+  - **Credits**: All implementation and logic handled by them.  
+
+- **Verified across devices for functionality and design consistency.**  
+
+---
+
 ## Reproduction Steps:
 
-### Log 1.4 2/8/2025
+### **Log 1.5 - Reproduction Steps**  
 
-1. **Clone the Repository**:
+1. **Clone the Repository**:  
    - Clone the project using Git:  
      ```bash
      git clone https://github.com/AbdulkadirAhmed1/StudentHUB-Project.git
      cd mainApp
-     ```
+     ```  
 
-2. **Start the Project**:
-   - Run the following command to start the Expo development server:
+2. **Start the Project**:  
+   - Run the following command to start the **Expo development server**:  
      ```bash
      npx expo start
-     ```
-   - Scan the QR code with the **Expo Go** app on your mobile device or open the app in the browser.
+     ```  
+   - Scan the **QR code** with the **Expo Go** app on your mobile device or open the app in the browser.  
 
-3. **Changes Made** _(Frontend Development by Daksh)_: 
-   - **Calendar Page** (`calendar.tsx`):  
-     - Added a redesigned header for day labels.
-     - Implemented a time-slot system for daily schedules.
-     - Integrated a "Add Course" button.
-     - Styled the entire page for a better user experience.
+3. **Changes Made** _(Frontend Development by Sandeepon Saha & Fardad Rashidian)_:  
+   - **Advising Page Update** (`advising.tsx`):  
+     - Implemented an **interactive chatbot** that provides predefined advising responses.  
+     - Integrated advising data from a **separate data file** (`advisingData.ts`).  
+     - Created a structured **response model** (`AdvisingResponse.ts`).  
+     - Enhanced UI for improved readability and usability.  
+     - Chat interface allows users to select **predefined advising queries**.  
+     - Currently supports **three advising prompts**:  
+       - *"What courses should I take?"*  
+       - *"How do I drop a course?"*  
+       - *"When is the last day to enroll?"*  
 
-4. **Tab Setup**:
-   - Tabs remain unchanged:
-     - **Calendar** tab now includes the updated design and features.
+4. **Tab Setup**:  
+   - Tabs remain unchanged:  
+     - **Advising** tab now features a **dynamic chatbot assistant**.  
+     - All previous tabs continue to function as expected.  
 
 ---
 
@@ -227,3 +258,32 @@
 - **Future Releases**:
   - Plan for the next pre-release with backend and database functionalities integrated.
   - Finalize and optimize features for production readiness.
+
+### Log 1.5 2/12/2025
+
+- **To Test**:  
+  - Open the app on **Expo Go** or in a web browser.  
+  - Navigate to the **Advising tab** and confirm the new advising prompts appear.  
+  - Select each prompt and verify that they return the expected response.  
+  - Ensure that UI elements display correctly across different screen sizes and devices.  
+
+- **Styling & UX Enhancements**:  
+  - Further refine the advising layout for better readability.  
+  - Improve button styling and alignment for a **seamless user experience**.  
+
+- **Testing**:  
+  - Verify navigation between prompts works **without errors**.  
+  - Ensure all advising prompts function as expected.  
+  - Conduct UI tests to **verify mobile and tablet responsiveness**.  
+
+- **Database Integration**:  
+  - Begin integrating **MongoDB** for managing advising data.  
+  - Store student queries and responses for **better advising insights**.  
+  - Enable adding courses dynamically in the **Calendar tab**.  
+  - Allow students to **book advising sessions** directly from the app.  
+
+- **Future Features**:  
+  - Expand advising prompts to include **more academic-related queries**.  
+  - Implement **dynamic response handling** for advising questions.  
+  - Introduce **personalized advising recommendations** based on user input.  
+  - Ensure seamless backend integration with frontend for **real-time course updates**.  
