@@ -1,12 +1,32 @@
 // calendar.tsx
-import React from 'react';
+import React, { useEffect, useState } from "react";
+//Using useEffect hook to make an API
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+//TESTING: http://YOUR_IPV4_ADRESS:5000
+//OFFICAL (HOSTED BY RENDER): https://studenthub-project.onrender.com 
+
+const BACKEND_URL = "http://192.168.2.240:5000"; //JUST FOR TESTING 
+
 export default function CalendarScreen() {
+  const [backendMessage, setBackendMessage] = useState("");
+
+  useEffect(() => {
+    // Fetch data from backend
+    fetch(`${BACKEND_URL}/api/test`)
+      .then((response) => response.json())
+      .then((data) => setBackendMessage(data.message))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Calender Header */}
       <Text style={styles.header}>Welcome to the Calender!</Text>
+
+      {/* Display backend message */}
+      <Text style={styles.backendMessage}>Backend Says: {backendMessage}</Text>
+      
       <View style={styles.calendarContainer}>
         {/* Time Column */}
         <View style={styles.timeColumn}>
@@ -36,6 +56,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingTop: 50,
     width: '100%',
+  },
+  backendMessage: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "darkblue",
+    marginVertical: 10,
   },
   heading: {
     fontSize: 22,
