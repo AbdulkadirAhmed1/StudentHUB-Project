@@ -147,7 +147,8 @@
 
 - **Contribution Note**:  
   - **Developed by**: Sandeepon Saha & Fardad Rashidian.  
-  - **Credits**: All implementation and logic handled by them.  
+  - **Credits**: All implementation and logic handled by them.
+  - **Verification and documentation**: Handled by The Architect.
 
 - **Verified across devices for functionality and design consistency.**  
 
