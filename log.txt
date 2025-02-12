@@ -12,3 +12,8 @@ Complete talk about finishing up edits and planning for ITR0 before submission. 
 Meeting 3: Monday Feb 3 via Class Meeting (30 Minutes)
 Talk about the ITR1, set up the code base on VS code and the basic outline for the development using typescript, used Expo Go to check the progress. Started to work on the in depth details 
 of our ITR 1 detailed user stories.
+
+Meeting 4: Monday Feb 10 via Class Meeting (30 Minutes)
+Talked about the updated GUI for finishing up ITR1. Completed the UI for the Calendar User Stroy and discussed
+how we want to implement the backend and the database. Wrote the code for the overall structure of the chatbot
+and discussed how to improve it.
