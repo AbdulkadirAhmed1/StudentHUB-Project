@@ -2,11 +2,7 @@
 import React, { useEffect, useState } from "react";
 //Using useEffect hook to make an API
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-
-//TESTING: http://YOUR_IPV4_ADRESS:5000
-//OFFICAL (HOSTED BY RENDER): https://studenthub-project.onrender.com 
-
-const BACKEND_URL = "http://192.168.2.240:5000"; //JUST FOR TESTING 
+import { BACKEND_URL } from "@/constants/api"; 
 
 export default function CalendarScreen() {
   const [backendMessage, setBackendMessage] = useState("");
