@@ -121,7 +121,7 @@
     - Improved header design with day labels: **Mon**, **Tue**, **Wed**, **Thu**, and **Fri**.
     - Styled the calendar for a clean, user-friendly interface.
   - Verified functionality and design consistency across devices.
-  - **Contribution Note**: This update was implemented by Daksh Patel, with verification and documentation by The     Architect.
+  - **Contribution Note**: This update was implemented by **Daksh Patel**, with verification and documentation by The Architect.
 
   - **Screenshot of Updated Calendar**:  
     ![Calendar Tab Update](https://i.imgur.com/8mX192c.png)
@@ -154,9 +154,32 @@
 
 ---
 
+### **Log 1.6 2/14/2025**  
+
+- **Updated Login Page**:  
+  - Implemented a **basic UI** for the login page.  
+  - Includes fields for:  
+    - **Username**  
+    - **Password**  
+  - **Screenshot of Login Page**:  
+    ![Login Page](https://i.imgur.com/flTNih1.png)  
+
+- **Expanded Advising Chatbot Responses**:  
+  - The chatbot now recognizes additional advising-related queries:  
+    - **"How do I change my major?"**  
+    - **"What are different offered Engineerings?"**  
+    - **"What are some courses taken for Electrical Engineering?"**  
+  - **Screenshot of Updated Chatbot**:  
+    ![Updated Chatbot](https://i.imgur.com/iGYG21O.png)  
+
+- **Contribution Note**:  
+  - This update was implemented by **Daksh Patel**, with verification and documentation by **The Architect**.  
+
+---
+
 ## Reproduction Steps:
 
-### **Log 1.5 - Reproduction Steps**  
+### **Log 1.6 - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
@@ -172,22 +195,15 @@
      ```  
    - Scan the **QR code** with the **Expo Go** app on your mobile device or open the app in the browser.  
 
-3. **Changes Made** _(Frontend Development by Sandeepon Saha & Fardad Rashidian)_:  
-   - **Advising Page Update** (`advising.tsx`):  
-     - Implemented an **interactive chatbot** that provides predefined advising responses.  
-     - Integrated advising data from a **separate data file** (`advisingData.ts`).  
-     - Created a structured **response model** (`AdvisingResponse.ts`).  
-     - Enhanced UI for improved readability and usability.  
-     - Chat interface allows users to select **predefined advising queries**.  
-     - Currently supports **three advising prompts**:  
-       - *"What courses should I take?"*  
-       - *"How do I drop a course?"*  
-       - *"When is the last day to enroll?"*  
+3. **Changes Made** _(Frontend Development by Daksh Patel)_:  
+   - **Login Page** (`signup.tsx`):  
+     - Created a **basic UI** with input fields for **username and password**.  
+   - **Advising Chatbot Enhancements** (`advising.tsx`):  
+     - Added support for **three additional advising queries**.  
 
 4. **Tab Setup**:  
-   - Tabs remain unchanged:  
-     - **Advising** tab now features a **dynamic chatbot assistant**.  
-     - All previous tabs continue to function as expected.  
+   - **Login** tab now includes the updated design and functionality.  
+   - **Advising** tab now has an expanded chatbot with more responses.
 
 ---
 
@@ -288,3 +304,18 @@
   - Implement **dynamic response handling** for advising questions.  
   - Introduce **personalized advising recommendations** based on user input.  
   - Ensure seamless backend integration with frontend for **real-time course updates**.  
+
+### Log 1.6 2/12/2025
+
+- **User Authentication Implementation**:  
+  - Begin setting up **user authentication** for login functionality.  
+  - Secure login credentials using **backend authentication & database storage**.  
+
+- **Database Expansion (MongoDB)**:  
+  - Store **user credentials** for secure login.  
+  - Expand the **chatbot database** to allow a wider range of advising responses.  
+
+- **Testing & Enhancements**:  
+  - Conduct **UI tests** for the login page.  
+  - Ensure **seamless integration** of chatbot updates across all devices.  
+  - Verify that **new advising chatbot responses** work as expected.  
