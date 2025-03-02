@@ -318,4 +318,4 @@
 - **Testing & Enhancements**:  
   - Conduct **UI tests** for the login page.  
   - Ensure **seamless integration** of chatbot updates across all devices.  
-  - Verify that **new advising chatbot responses** work as expected.  
+  - Verify that new advising chatbot responses work as expected.
