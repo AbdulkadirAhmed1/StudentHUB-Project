@@ -24,4 +24,5 @@
 
 # Backend-specific ignores
 /backend/.env
+/backend/node_modules
 # If backend has any build folders or log files, add them here.
