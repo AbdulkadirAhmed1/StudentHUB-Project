@@ -17,3 +17,9 @@ Meeting 4: Monday Feb 10 via Class Meeting (30 Minutes)
 Talked about the updated GUI for finishing up ITR1. Completed the UI for the Calendar User Stroy and discussed
 how we want to implement the backend and the database. Wrote the code for the overall structure of the chatbot
 and discussed how to improve it.
+
+Meeting 5: Tuesday Feb 25 via Online Meeting (30 Minutes)
+Discussed the requirements for ITR2, focusing on persistent storage and integration. Decided to use PostgreSQL for the database and assigned tasks for setting up the connection, writing queries, and creating initial tests. Reviewed any outstanding UI issues from ITR1 and planned front-end integration with the new endpoints. Agreed to finalize the DB schema and implement basic GET/POST routes before the next meeting.
+
+Meeting 6: Tuesday March 3 via Class Meeting (45 Minutes)
+Reviewed the progress on PostgreSQL integration and confirmed successful local testing of the /api/courses endpoints using cURL. Verified that GET and POST requests worked and discussed the steps to connect the front-end for course display and addition. Planned additional integration tests for the real DB usage and assigned tasks for finalizing ITR2 documentation. 

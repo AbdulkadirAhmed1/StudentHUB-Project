@@ -1,11 +1,12 @@
+// src/server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const coursesRouter = require("./routes/courses");  // <-- Import our new router
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
@@ -18,6 +19,9 @@ app.get("/", (req, res) => {
 app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from StudentHUB Backend!" });
 });
+
+// Mount the courses router
+app.use("/api/courses", coursesRouter);
 
 // Start the server
 app.listen(PORT, () => {

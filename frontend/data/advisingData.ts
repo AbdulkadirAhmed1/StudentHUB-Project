@@ -7,5 +7,5 @@ export const advisingResponses: AdvisingResponse[] = [
   { id: 4, question: "How do I change my major?", answer: "You can change your major by contacting the registrar's office." },
   { id: 5, question: "What are different offered Engineerings", answer: "Some we have Software Engineering, Electrical Engineering, and Computer Engineering." },
   { id: 6, question: "What are some courses taken for Electrical Engineering?", answer: "Some courses are EECS 2200, EECS 2032, and EECS 2021."}
-  
+
 ];

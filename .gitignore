@@ -1,0 +1,27 @@
+# Ignore node_modules everywhere
+**/node_modules/
+
+# Frontend-specific ignores
+/frontend/.expo/
+/frontend/dist/
+/frontend/web-build/
+/frontend/expo-env.d.ts
+/frontend/*.orig.*
+/frontend/*.jks
+/frontend/*.p8
+/frontend/*.p12
+/frontend/*.key
+/frontend/*.mobileprovision
+/frontend/.metro-health-check*
+/frontend/npm-debug.*
+/frontend/yarn-debug.*
+/frontend/yarn-error.*
+/frontend/.DS_Store
+/frontend/*.pem
+/frontend/.env*.local
+/frontend/*.tsbuildinfo
+/frontend/app-example
+
+# Backend-specific ignores
+/backend/.env
+# If backend has any build folders or log files, add them here.
