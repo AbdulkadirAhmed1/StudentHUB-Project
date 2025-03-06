@@ -25,12 +25,18 @@ The **StudentHUB frontend** is built with **React Native & Expo**, ensuring cros
 
 ---
 
-## **📱 Android APK for Testing**  
-If you prefer not to set up the project locally, you can download the **APK file** for **Android testing**:  
-- The **latest release** can be found in the **"Releases" section** of this repository.  
-- The APK allows you to test the app **without needing Expo or a development environment**.  
+## **📱 Android APK for Testing (Planned for 2nd Generation)**  
+In **Version 2.0 (2nd Generation)**, an **APK file** will be provided for **Android testing**, allowing users to install and test the app **without needing Expo or a development environment**.  
 
-The **current release** is **Version 1.x**, and the next major update will be **Version 2.0 (2nd Generation).**  
+- Once available, the **latest release** can be found in the **"Releases" section** of this repository.  
+- This option is **not available in Version 1.x** but will be introduced in **Version 2.0**.  
+
+### **🔹 Beta APK (Version 1.3 Pre-Release)**  
+- **Version 1.3 included an APK file**, but this was a **pre-release (Beta version)** for testing purposes.  
+- The **APK for v1.3 is compatible with Android devices only** and can be found in the **"Pre-releases" section** of this repository.  
+- This version was primarily used for **early testing** and is **not the final stable release**.  
+
+For now, **testing requires running the frontend locally** using Expo. Follow the **Frontend Setup Guide** for detailed installation steps.
 
 ---
 
