@@ -64,7 +64,7 @@ The **StudentHUB project** is structured into **generations**, each focusing on 
 ### **📱 1st & 2nd Generation (Mobile App Focus)**  
 - **1st Generation (v1.1 - v.x.x)** → **Initial development phase**, setting up the **core app structure, UI, and backend integration**.  
   - This phase follows the **Big User Stories and Detailed User Stories standard**, ensuring structured development.  
-  - 📌 **Refer to:** `StudentHUB-Project/Student-HUB Project ITR0 (copy 1.1).pdf` [ITR0](./Student-HUB%20Project%20ITR0%20(copy%201.1).pdf) for detailed planning and breakdown of features.  
+  - 📌 **Refer to:** `StudentHUB-Project/Student-HUB Project ITR0 (copy 1.1).pdf` [ITR0](Student-HUB%20Project%20ITR0(copy%201.1).pdf) for detailed planning and breakdown of features.  
   - The **focus is on completing core functionalities** before expanding further in later generations.    
 - **2nd Generation (v2.1 - v.x.x)** → **Advanced mobile app development**, focusing on making the app **production-ready** for **millions of users**.  
 - 🚀 **Once the mobile app is complete (App Store-ready), development shifts to the website.**  
