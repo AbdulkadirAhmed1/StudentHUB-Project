@@ -177,34 +177,101 @@
 
 ---
 
+### **Log 1.7 3/7/2025**  
+
+- **Massive Calendar Tab Overhaul**:
+  - The entire **Calendar tab** received a **major visual and functional revamp**.
+  - Implemented a **scrolling UI** that **automatically lists** all courses added.
+  - Enhanced **UI/UX** to ensure smooth and intuitive navigation.
+
+  - **Calendar Page (No Courses Added)**:
+    ![Calendar Page (No Courses)](https://i.imgur.com/QgkAdEt.png)
+
+- **New "+ Add Course" Feature**:
+  - A **new modal** now appears upon clicking **"+ Add Course"**.
+  - Allows users to **enter course details**, including:
+    - **Course Name**
+    - **Day** (Mon, Tue, Wen, Thur, Fri)
+    - **Time** (24-hour format)
+  - **Strict validation rules** enforced:
+    - Prevents **duplicate course times**.
+    - Ensures **valid day and time formats**.
+    - Requires a **minimum of 3 characters** for the course name.
+
+  - **"+ Add Course" Pop-up**:
+    ![+ Add Course Modal](https://i.imgur.com/5UoqzR1.png)
+
+- **Dynamic Course Addition**:
+  - Once added, **courses instantly appear** in the **scrollable list**.
+  - **Courses persist**, ensuring seamless experience.
+  - Verified smooth UI updates.
+
+  - **Calendar Page (With Courses Added)**:
+    ![Calendar Page (Courses Added)](https://i.imgur.com/aImbgJU.png)
+
+- **New "+ Plot Calendar" Feature**:
+  - Clicking **"📅 Plot Calendar"** generates a **dynamic calendar**.
+  - Courses **auto-populate their respective time slots**.
+  - Supports **scrolling up/down & left/right** to navigate all time slots.
+  - **24-hour format** used for accuracy.
+  - (Potential future update: Change to **7:00 - 24:00** instead of **0:00 - 24:00**)
+
+  - **Plot Calendar Pop-up**:
+    ![Plot Calendar View](https://i.imgur.com/itCcivb.png)
+
+  - **Scrollable View Example**:
+    ![Scrollable Calendar](https://i.imgur.com/8bKPXkU.png)
+
+- **Implemented Full Jest Unit Tests** 🧪:
+  - Ensured **full coverage for core functionalities**, including:
+    - **Adding Courses**
+    - **Duplicate Course Prevention**
+    - **Invalid Input Handling**
+    - **Plot Calendar Rendering**
+  - This marks a **major milestone** for **project test coverage**.
+
+- **Technical Enhancements**:
+  - Implemented **state updates** to track course changes dynamically.
+  - Optimized **performance** when handling **multiple courses**.
+  - Verified **backend compatibility** (planned backend expansion for future iterations).
+
+---
+
 ## Reproduction Steps:
 
-### **Log 1.6 - Reproduction Steps**  
+### **Log 1.7  - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
      ```bash
      git clone https://github.com/AbdulkadirAhmed1/StudentHUB-Project.git
      cd mainApp
-     ```  
+     ```
 
 2. **Start the Project**:  
    - Run the following command to start the **Expo development server**:  
      ```bash
      npx expo start
-     ```  
-   - Scan the **QR code** with the **Expo Go** app on your mobile device or open the app in the browser.  
+     ```
+   - Scan the **QR code** with the **Expo Go** app or open the app in the browser.
 
-3. **Changes Made** _(Frontend Development by Daksh Patel)_:  
-   - **Login Page** (`signup.tsx`):  
-     - Created a **basic UI** with input fields for **username and password**.  
-   - **Advising Chatbot Enhancements** (`advising.tsx`):  
-     - Added support for **three additional advising queries**.  
+3. **Calendar Tab Overhaul**:  
+   - Open the **Calendar tab**.
+   - Observe the **new UI layout** and **scrollable course list**.
+   - Click **"+ Add Course"** and **input valid details**.
 
-4. **Tab Setup**:  
-   - **Login** tab now includes the updated design and functionality.  
-   - **Advising** tab now has an expanded chatbot with more responses.
+4. **Test Course Addition**:  
+   - Add a course using the modal.
+   - Confirm that the course **instantly appears in the list**.
 
+5. **Test "+ Plot Calendar" Feature**:  
+   - Click **"📅 Plot Calendar"**.
+   - Ensure courses appear in their correct **time slots**.
+  
+6. **Run Jest Unit Tests** (Ensure test cases pass):  
+     ```bash
+     npx expo start
+     ```
 ---
 
 ## Next Steps:
@@ -261,10 +328,10 @@
 
 - **Backend Integration**:
   - Begin setting up the backend for the calendar feature using **Node.js** and **Express.js**.
-  - Host the backend on **Render** and connect it to the frontend.
+  - Host the backend on **Render** and connect it to the frontend.git
 
 - **Database Setup**:
-  - Collaboratively design and implement the **MongoDB** database schema with the team.
+  - Collaboratively design and implement the **PostgreSQL/MongoDB** database schema with the team.
   - Ensure seamless integration of backend APIs with the database and frontend.
 
 - **Testing**:
@@ -294,7 +361,7 @@
   - Conduct UI tests to **verify mobile and tablet responsiveness**.  
 
 - **Database Integration**:  
-  - Begin integrating **MongoDB** for managing advising data.  
+  - Begin integrating **PostgreSQL/MongoDB** for managing advising data.  
   - Store student queries and responses for **better advising insights**.  
   - Enable adding courses dynamically in the **Calendar tab**.  
   - Allow students to **book advising sessions** directly from the app.  
@@ -311,11 +378,24 @@
   - Begin setting up **user authentication** for login functionality.  
   - Secure login credentials using **backend authentication & database storage**.  
 
-- **Database Expansion (MongoDB)**:  
+- **Database Expansion (PostgreSQL)**:  
   - Store **user credentials** for secure login.  
   - Expand the **chatbot database** to allow a wider range of advising responses.  
 
 - **Testing & Enhancements**:  
   - Conduct **UI tests** for the login page.  
   - Ensure **seamless integration** of chatbot updates across all devices.  
-  - Verify that new advising chatbot responses work as expected.
+  - Verify that new advising chatbot responses work as expected. 
+
+### Log 1.7 3/7/2025
+
+- **Backend API Development (Node.js & Express)**:
+  - Ensure seamless **backend integration** with the **frontend UI**.
+
+- **Optimize Calendar Layout**:
+  - Adjust time range from **0:00-24:00** to **7:00-24:00**.
+  - Improve spacing and readability for better usability.
+
+- **Enhance Course Input Validations**:
+  - Add **professor names & room numbers** (Optional fields currently, but UI will show them).
+  - Implement **better error handling messages** for user clarity.
