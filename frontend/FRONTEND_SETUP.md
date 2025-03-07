@@ -2,7 +2,7 @@
 
 ## **Authored by The Architect (Abdulkadir Ahmed)**  
 
-This is the frontend of the StudentHUB project, built using React Native & Expo. You can test this by simply downloading the frontend files; the backend is hosted separately and does not need to be set up locally. Additionally, an APK file is released for every version for Android testing, allowing you to manually download and install it if preferred. The next release will be Version 2(V2) (2nd Generation).
+This is the frontend of the StudentHUB project, built using React Native & Expo. You can test this by simply downloading the frontend files; the backend is hosted separately and does not need to be set up locally. Additionally, an APK file is released for every version for Android testing, allowing you to manually download and install it if preferred. The next generation will be Version 2 (also know V2 or 2nd Generation).
 
 ---
 
