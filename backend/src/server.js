@@ -1,12 +1,15 @@
 // src/server.js
+
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const coursesRouter = require("./routes/courses");  // <-- Import our new router
+const coursesRouter = require("./routes/courses"); // Existing courses router
+const advisingRouter = require("./routes/advising"); // NEW advising router
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(express.json());
 app.use(cors());
 
@@ -22,6 +25,9 @@ app.get("/api/test", (req, res) => {
 
 // Mount the courses router
 app.use("/api/courses", coursesRouter);
+
+// Mount the advising router
+app.use("/api/advising", advisingRouter);
 
 // Start the server
 app.listen(PORT, () => {
