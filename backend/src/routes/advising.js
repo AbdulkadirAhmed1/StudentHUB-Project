@@ -1,20 +1,16 @@
-// src/routes/advising.js
-
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 const pdfParse = require('pdf-parse');
-
-// Debug logs to confirm the new library
-console.log("DEBUG: require('openai') =>", require('openai'));
-
-// Import the new OpenAI class from openai@4.x
 const OpenAI = require('openai');
-console.log("DEBUG: OpenAI =>", OpenAI);
 
-// Setup multer for PDF uploads
 const upload = multer({ dest: 'uploads/' });
+
+// ✅ ADD THIS TEST GET ROUTE
+router.get("/", (req, res) => {
+  res.json({ message: "Advising API is working!" });
+});
 
 /**
  * POST /api/advising/upload-pdf
@@ -25,38 +21,25 @@ const upload = multer({ dest: 'uploads/' });
  */
 router.post('/upload-pdf', upload.single('pdfFile'), async (req, res) => {
   try {
-    // 1️⃣ Read the PDF file from disk
     const pdfBuffer = fs.readFileSync(req.file.path);
-
-    // 2️⃣ Parse text from PDF
     const data = await pdfParse(pdfBuffer);
     const pdfText = data.text;
-
-    // 3️⃣ Remove the uploaded file to free space (optional)
     fs.unlinkSync(req.file.path);
 
-    // 4️⃣ Summarize PDF content with GPT-4
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY // from .env
+      apiKey: process.env.OPENAI_API_KEY
     });
 
     const prompt = `You are an academic advisor. The PDF text is:\n\n${pdfText}\n\nPlease provide a summary of the student's degree progress.`;
 
-    // New call for openai@4.x: chat.completions.create
     const gptResponse = await openai.chat.completions.create({
-      model: "gpt-4", // or "gpt-3.5-turbo" if you don't have GPT-4
+      model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
 
-    // gptResponse.choices[0].message.content contains the summary
     const summary = gptResponse.choices[0].message.content.trim();
 
-    // 5️⃣ Send the summary back to the frontend
-    res.json({
-      success: true,
-      summary,
-      pdfText // optionally return the raw PDF text
-    });
+    res.json({ success: true, summary, pdfText });
   } catch (error) {
     console.error("Error in /upload-pdf:", error);
     res.status(500).json({ success: false, error: error.message });
