@@ -15,7 +15,7 @@ import * as DocumentPicker from "expo-document-picker";
 // If you're on a real device, replace with your computer's LAN IP + correct port
 // For iOS simulator, "http://localhost:5001" often works
 // For Android emulator, "http://10.0.2.2:5001"
-const BACKEND_URL = "http://192.168.192.72:5000";
+const BACKEND_URL = "https://studenthub-project.onrender.com";
 
 export default function AdvisingScreen() {
   const [input, setInput] = useState("");
@@ -37,7 +37,7 @@ export default function AdvisingScreen() {
       const data = await res.json();
       console.log("Backend test route response:", data);
       alert("Success: " + JSON.stringify(data));
-    } catch (err) {
+    } catch (err: any) {
       console.error("Test route error:", err);
       alert("Error: " + err.message);
     }
@@ -50,48 +50,49 @@ export default function AdvisingScreen() {
   async function pickPdfAndUpload() {
     try {
       console.log("Launching DocumentPicker...");
-
+  
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/pdf",
-        copyToCacheDirectory: true // <--- Force local copy on iOS
+        copyToCacheDirectory: true, // Ensures iOS gets a local file path
       });
+  
       console.log("DocumentPicker result:", result);
-
-      if (result.type === "cancel") {
+  
+      // Check if the user canceled the selection
+      if (!result.assets || result.canceled) {
         console.log("User canceled picking a PDF");
         return;
       }
-
-      // Log the selected PDF details
-      console.log("Picked PDF URI:", result.uri);
-      console.log("Picked PDF name:", result.name);
-
+  
+      // Access file details from `result.assets[0]`
+      const selectedFile = result.assets[0];
+      console.log("Picked PDF URI:", selectedFile.uri);
+      console.log("Picked PDF name:", selectedFile.name);
+  
       // Prepare FormData
       const formData = new FormData();
       formData.append("pdfFile", {
-        uri: result.uri,
+        uri: selectedFile.uri,
         type: "application/pdf",
-        name: result.name || "myFile.pdf",
+        name: selectedFile.name || "myFile.pdf",
       } as any);
-
+  
       console.log("FormData constructed, sending fetch request to backend...");
-
+  
       // POST /api/advising/upload-pdf
       const uploadRes = await fetch(`${BACKEND_URL}/api/advising/upload-pdf`, {
         method: "POST",
         body: formData,
       });
-
+  
       console.log("Upload response status:", uploadRes.status);
       const data = await uploadRes.json();
       console.log("Upload response data:", data);
-
+  
       if (data.success) {
-        // Store pdfText for future Q&A
         console.log("PDF upload success! Storing pdfText for Q&A...");
         setPdfText(data.pdfText);
-
-        // Show the GPT summary in the chat
+  
         const summaryMsg = { role: "assistant", content: data.summary };
         setMessages((prev) => [...prev, summaryMsg]);
       } else {
@@ -100,7 +101,7 @@ export default function AdvisingScreen() {
     } catch (err) {
       console.error("Error picking/uploading PDF:", err);
     }
-  }
+  }  
 
   /**
    * Call the AI endpoint => GPT answer
