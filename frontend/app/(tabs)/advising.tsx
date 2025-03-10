@@ -8,32 +8,34 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 
-// If you're on a real device, replace with your computer's LAN IP + correct port
-// For iOS simulator, "http://localhost:5001" often works
-// For Android emulator, "http://10.0.2.2:5001"
-const BACKEND_URL = "https://studenthub-project.onrender.com";
+// Replace with your own backend URL
+// If you're on a real device, use your server's LAN IP + port
+// e.g. "http://192.168.1.123:5001" or "https://studenthub-project.onrender.com"
+const BACKEND_URL = "http://192.168.2.149:5001";
 
 export default function AdvisingScreen() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
-  const [pdfText, setPdfText] = useState(""); // store the PDF text from the server
+  const [pdfText, setPdfText] = useState(""); // Will store PDF text from backend
 
   /**
-   * Test the /api/test route to confirm backend connectivity
+   * 1. Test the /api/test route to confirm backend connectivity
    */
   async function testConnection() {
     try {
       console.log("Testing backend connectivity...");
+
       const res = await fetch(`${BACKEND_URL}/api/test`);
       console.log("testConnection fetch status:", res.status);
 
       if (!res.ok) {
         throw new Error(`Status: ${res.status}`);
       }
+
       const data = await res.json();
       console.log("Backend test route response:", data);
       alert("Success: " + JSON.stringify(data));
@@ -44,78 +46,78 @@ export default function AdvisingScreen() {
   }
 
   /**
-   * Upload a PDF => parse text => GPT summary
-   * Uses copyToCacheDirectory: true to ensure iOS gives us a local file path
+   * 2. Pick a PDF => Upload => parse => get summary
    */
   async function pickPdfAndUpload() {
     try {
       console.log("Launching DocumentPicker...");
-  
+
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/pdf",
-        copyToCacheDirectory: true, // Ensures iOS gets a local file path
+        copyToCacheDirectory: true, // ensures iOS gives us a local file path
       });
-  
       console.log("DocumentPicker result:", result);
-  
-      // Check if the user canceled the selection
-      if (!result.assets || result.canceled) {
+
+      if (result.type === "cancel") {
         console.log("User canceled picking a PDF");
         return;
       }
-  
-      // Access file details from `result.assets[0]`
-      const selectedFile = result.assets[0];
-      console.log("Picked PDF URI:", selectedFile.uri);
-      console.log("Picked PDF name:", selectedFile.name);
-  
+
+      // Log the selected PDF details
+      console.log("Picked PDF URI:", result.uri);
+      console.log("Picked PDF name:", result.name);
+
       // Prepare FormData
       const formData = new FormData();
       formData.append("pdfFile", {
-        uri: selectedFile.uri,
+        uri: result.uri,
         type: "application/pdf",
-        name: selectedFile.name || "myFile.pdf",
+        name: result.name || "myFile.pdf",
       } as any);
-  
+
       console.log("FormData constructed, sending fetch request to backend...");
-  
+
       // POST /api/advising/upload-pdf
       const uploadRes = await fetch(`${BACKEND_URL}/api/advising/upload-pdf`, {
         method: "POST",
         body: formData,
       });
-  
+
       console.log("Upload response status:", uploadRes.status);
       const data = await uploadRes.json();
       console.log("Upload response data:", data);
-  
+
       if (data.success) {
+        // Store pdfText for future Q&A
         console.log("PDF upload success! Storing pdfText for Q&A...");
         setPdfText(data.pdfText);
-  
+
+        // Optionally show the GPT summary in the chat
         const summaryMsg = { role: "assistant", content: data.summary };
         setMessages((prev) => [...prev, summaryMsg]);
       } else {
         console.error("PDF upload failed:", data.error);
+        alert("PDF upload failed: " + data.error);
       }
     } catch (err) {
       console.error("Error picking/uploading PDF:", err);
+      alert("Error picking/uploading PDF: " + err);
     }
-  }  
+  }
 
   /**
-   * Call the AI endpoint => GPT answer
+   * 3. Send user question => call AI => display answer
    */
   async function fetchAiAnswer(question: string, pdf: string): Promise<string> {
     try {
-      console.log("fetchAiAnswer called with question:", question, "pdfText length:", pdf.length);
+      console.log("fetchAiAnswer called with question:", question);
 
       const res = await fetch(`${BACKEND_URL}/api/advising/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userQuestion: question,
-          pdfText: pdf
+          pdfText: pdf, // can be "" if user never uploaded a PDF
         }),
       });
 
@@ -140,7 +142,7 @@ export default function AdvisingScreen() {
   }
 
   /**
-   * User sends a message => call AI => add both messages to chat
+   * 4. Add user message => get AI response => add bot message
    */
   async function sendMessage() {
     if (!input.trim()) {
@@ -148,13 +150,15 @@ export default function AdvisingScreen() {
       return;
     }
 
-    console.log("Sending message:", input);
-
+    // Add user message to chat
     const userMsg = { role: "user", content: input };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
+    // Call AI
     const aiReply = await fetchAiAnswer(input, pdfText);
+
+    // Add AI message to chat
     const botMsg = { role: "assistant", content: aiReply };
     setMessages((prev) => [...prev, botMsg]);
   }
@@ -175,16 +179,13 @@ export default function AdvisingScreen() {
         {/* Main content: chat scroll + input bar */}
         <View style={styles.contentContainer}>
           {/* Chat messages */}
-          <ScrollView
-            style={styles.chatContainer}
-            contentContainerStyle={styles.chatContent}
-          >
+          <ScrollView style={styles.chatContainer} contentContainerStyle={styles.chatContent}>
             {messages.map((msg, index) => (
               <View
                 key={index}
                 style={[
                   styles.messageBubble,
-                  msg.role === "user" ? styles.userBubble : styles.botBubble
+                  msg.role === "user" ? styles.userBubble : styles.botBubble,
                 ]}
               >
                 <Text style={styles.messageText}>{msg.content}</Text>
@@ -209,13 +210,14 @@ export default function AdvisingScreen() {
   );
 }
 
+// --- Styles ---
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
   },
   keyboardContainer: {
-    flex: 1
+    flex: 1,
   },
   headerContainer: {
     alignItems: "center",
@@ -232,7 +234,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 8,
   },
-
   contentContainer: {
     flex: 1,
     justifyContent: "space-between",
@@ -240,37 +241,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   chatContainer: {
-    flex: 1
+    flex: 1,
   },
   chatContent: {
-    padding: 10
+    padding: 10,
   },
-
   messageBubble: {
     marginVertical: 4,
     padding: 8,
     borderRadius: 8,
-    maxWidth: "75%"
+    maxWidth: "75%",
   },
   userBubble: {
     alignSelf: "flex-end",
-    backgroundColor: "#ddd"
+    backgroundColor: "#ddd",
   },
   botBubble: {
     alignSelf: "flex-start",
-    backgroundColor: "#ADD8E6"
+    backgroundColor: "#ADD8E6",
   },
   messageText: {
-    fontSize: 14
+    fontSize: 14,
   },
-
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderTopWidth: 1,
     borderColor: "#ccc",
     padding: 10,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   input: {
     flex: 1,
@@ -279,6 +278,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     fontSize: 14,
-    marginRight: 10
+    marginRight: 10,
   },
 });
