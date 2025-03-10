@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Message = require('../models/Message'); 
+
 
 // Add a student to the chat
 router.post('/add-student', async (req, res) => {
@@ -23,5 +25,40 @@ router.delete('/remove-student/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.get('/messages', async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ timestamp: 'asc' });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Post a new message
+router.post('/messages', async (req, res) => {
+  try {
+    const { senderId, senderName, senderYear, senderProgram, content } = req.body;
+    if (!senderId || !content) {
+      return res.status(400).json({ error: 'Sender ID and content are required' });
+    }
+    
+    const newMessage = new Message({
+      senderId,
+      senderName,
+      senderYear,
+      senderProgram,
+      content,
+      timestamp: new Date(),
+    });
+
+    await newMessage.save();
+    res.status(201).json(newMessage);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 module.exports = router;
