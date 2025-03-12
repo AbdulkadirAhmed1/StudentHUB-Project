@@ -1,0 +1,26 @@
+[Date: 2025-03-10]
+
+ Backend Issues Log 
+
+ Updates:
+- Integrated API calls to fetch/send messages.
+- UI layout improvements for smoother rendering.
+- Connected backend to PostgreSQL.
+
+Encountered Issues:
+- Backend not responding at: http://localhost:5000/api/chat/messages
+- Error message: "curl: (7) Failed to connect to localhost port 5000"
+- PostgreSQL connection verified manually via `psql`, but API calls fail.
+- `netstat` does not show the server listening on port `5000`.
+
+ Debugging Attempts:
+1. Restarted PostgreSQL (`net stop postgresql-x64-17 && net start postgresql-x64-17`).
+2. Disabled and re-enabled firewall (`netsh advfirewall set allprofiles state off`).
+3. Checked Node.js server logs (`npm run dev` confirmed running).
+4. Switched backend to port `4000` (did not resolve the issue).
+5. Verified database connection via `psql -U postgres -d studenthub` (working).
+
+ Possible Causes:
+- Port `5000` may be blocked by another process.
+- Express.js not binding correctly to `localhost`.
+- Windows network settings preventing connections.
