@@ -1,16 +1,18 @@
-// src/server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const coursesRouter = require("./routes/courses");  // <-- Import our new router
+const pool = require("./db/index");
+const coursesRouter = require("./routes/courses");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
+
+const chatRoutes = require("./routes/chat"); //  Import chat routes
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" })); //  Allow all frontend requests
 
-// Default route
+// Default test route
 app.get("/", (req, res) => {
   res.send("StudentHUB Backend is running...");
 });
@@ -23,7 +25,10 @@ app.get("/api/test", (req, res) => {
 // Mount the courses router
 app.use("/api/courses", coursesRouter);
 
+// Mount API routes
+app.use("/api/chat", chatRoutes); //  Ensures `/api/chat/messages` works
+
 // Start the server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

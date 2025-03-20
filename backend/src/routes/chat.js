@@ -1,26 +1,35 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../models/User');
+const pool = require("../db/index");
 
-// Add a student to the chat
-router.post('/add-student', async (req, res) => {
-  const { name, yearOfStudy, program } = req.body;
+//  Get all messages from the database
+router.get("/messages", async (req, res) => {
   try {
-    const newStudent = new User({ name, yearOfStudy, program });
-    await newStudent.save();
-    res.status(201).json(newStudent);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const result = await pool.query("SELECT * FROM messages ORDER BY timestamp ASC");
+    res.json(result.rows);
+  } catch (error) {
+    console.error(" Error fetching messages:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Remove a student from the chat
-router.delete('/remove-student/:id', async (req, res) => {
+//  Post a new message to the database
+router.post("/messages", async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Student removed from the chat' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { senderId, senderName, senderYear, senderProgram, content } = req.body;
+    if (!senderId || !content) {
+      return res.status(400).json({ error: "Sender ID and content are required" });
+    }
+
+    const result = await pool.query(
+      "INSERT INTO messages (senderId, senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *",
+      [senderId, senderName, senderYear, senderProgram, content]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error saving message:", error);
+    res.status(500).json({ error: "Failed to save message" });
   }
 });
 
