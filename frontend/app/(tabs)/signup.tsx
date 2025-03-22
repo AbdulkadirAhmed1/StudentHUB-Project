@@ -1,7 +1,8 @@
-// app/(tabs)/LoginScreen.tsx (or wherever you want)
+// app/(tabs)/LoginScreen.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // Import your backend URL
 import { BACKEND_URL } from '../../constants/api';
 
@@ -25,6 +26,22 @@ export default function LoginRegisterScreen() {
     program: string;
   }>(null);
 
+  // Auto-login on mount if a user is saved in AsyncStorage
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const savedUser = await AsyncStorage.getItem('currentUser');
+        if (savedUser) {
+          setCurrentUser(JSON.parse(savedUser));
+          setMode('loggedIn');
+        }
+      } catch (error) {
+        console.error('Error loading user from storage', error);
+      }
+    };
+    loadUser();
+  }, []);
+
   // Handle login
   const handleLogin = async () => {
     try {
@@ -36,9 +53,10 @@ export default function LoginRegisterScreen() {
       const data = await response.json();
 
       if (response.ok) {
-        // Logged in successfully
+        // Logged in successfully, save user to AsyncStorage
         setCurrentUser(data.user);
         setMode('loggedIn');
+        await AsyncStorage.setItem('currentUser', JSON.stringify(data.user));
       } else {
         alert(data.error || 'Login failed');
       }
@@ -48,12 +66,34 @@ export default function LoginRegisterScreen() {
     }
   };
 
-  // Handle registration
+  // Handle registration with validation
   const handleRegister = async () => {
+    // Validate required fields
     if (!username || !password || !yearOfStudy || !program) {
       alert('All fields are required.');
       return;
     }
+    // Username must be more than 6 characters and less than 14 characters
+    if (username.length <= 6) {
+      alert('Username must be more than 6 characters.');
+      return;
+    }
+    if (username.length > 14) {
+      alert('Username must be less than 14 characters.');
+      return;
+    }
+    // Password must be exactly 6 characters
+    if (password.length !== 6) {
+      alert('Password must be exactly 6 characters.');
+      return;
+    }
+    // Year of Study must be a number between 1 and 20
+    const numericYear = parseInt(yearOfStudy, 10);
+    if (isNaN(numericYear) || numericYear < 1 || numericYear > 20) {
+      alert('Year of Study must be a number between 1 and 20.');
+      return;
+    }
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
         method: 'POST',
@@ -61,16 +101,17 @@ export default function LoginRegisterScreen() {
         body: JSON.stringify({ 
           username, 
           password, 
-          yearOfStudy, 
+          yearOfStudy: numericYear.toString(), 
           program 
         }),
       });
       const data = await response.json();
 
       if (response.ok) {
-        // Registration success
+        // Registration success: auto-login and save user
         setCurrentUser(data.user);
         setMode('loggedIn');
+        await AsyncStorage.setItem('currentUser', JSON.stringify(data.user));
       } else {
         alert(data.error || 'Registration failed');
       }
@@ -80,19 +121,41 @@ export default function LoginRegisterScreen() {
     }
   };
 
-  // Logout
-  const handleLogout = () => {
+  // Logout: clear state and AsyncStorage
+  const handleLogout = async () => {
     setCurrentUser(null);
     setUsername('');
     setPassword('');
     setYearOfStudy('');
     setProgram('');
     setMode('login');
+    await AsyncStorage.removeItem('currentUser');
+  };
+
+  // Delete Account: remove user from database and log out
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/auth/delete`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: currentUser?.id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Account deleted successfully.');
+        handleLogout();
+      } else {
+        alert(data.error || 'Error deleting account.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error deleting account.');
+    }
   };
 
   // Conditionally render UI based on `mode`
   if (mode === 'loggedIn' && currentUser) {
-    // Logged In View
+    // Logged In View with Logout and Delete Account options
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Welcome, {currentUser.username}!</Text>
@@ -103,6 +166,13 @@ export default function LoginRegisterScreen() {
         
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, { backgroundColor: 'red' }]} 
+          onPress={handleDeleteAccount}
+        >
+          <Text style={styles.buttonText}>Delete Account</Text>
         </TouchableOpacity>
       </View>
     );
@@ -130,6 +200,7 @@ export default function LoginRegisterScreen() {
           placeholder="Enter Year of Study"
           value={yearOfStudy}
           onChangeText={setYearOfStudy}
+          keyboardType="numeric"
         />
         <TextInput
           style={styles.input}

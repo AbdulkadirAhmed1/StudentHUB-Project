@@ -39,6 +39,22 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// DELETE /api/auth/delete
+router.delete('/delete', async (req, res) => {
+    try {
+      const { id } = req.body;  // expecting the user id in the body
+      if (!id) {
+        return res.status(400).json({ error: 'User id is required.' });
+      }
+      // Delete user from the database.
+      await pool.query('DELETE FROM users WHERE id = $1', [id]);
+      res.json({ message: 'User deleted successfully.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error deleting user.' });
+    }
+  });
+
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
