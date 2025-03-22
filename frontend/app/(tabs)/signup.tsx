@@ -78,13 +78,18 @@ export default function LoginRegisterScreen() {
       alert('Username must be more than 6 characters.');
       return;
     }
-    if (username.length > 14) {
+    if (username.length >= 14) {
       alert('Username must be less than 14 characters.');
       return;
     }
     // Password must be exactly 6 characters
-    if (password.length !== 6) {
-      alert('Password must be exactly 6 characters.');
+    if (password.length <= 6) {
+      alert('Password must be greater than 6 characters.');
+      return;
+    }
+
+    if (password.length >= 14) {
+      alert('Password must be less than 14 characters.');
       return;
     }
     // Year of Study must be a number between 1 and 20
