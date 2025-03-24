@@ -2,11 +2,10 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const coursesRouter = require("./routes/courses");  // <-- Import our new router
+const coursesRouter = require("./routes/courses");
 const authRouter = require("./routes/auth");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
@@ -25,7 +24,5 @@ app.get("/api/test", (req, res) => {
 app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Export app for tests (no .listen call here)
+module.exports = app;
