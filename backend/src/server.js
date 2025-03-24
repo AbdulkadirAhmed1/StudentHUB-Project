@@ -1,13 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-<<<<<<< HEAD
 const pool = require("./db/index");
+
 const coursesRouter = require("./routes/courses");
-=======
-const coursesRouter = require("./routes/courses");  // <-- Import our new router
 const authRouter = require("./routes/auth");
->>>>>>> 7be5ae309c49b8ba0e58d114567583d29fe3db49
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
