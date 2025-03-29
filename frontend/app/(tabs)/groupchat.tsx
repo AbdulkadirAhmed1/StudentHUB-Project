@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import io from "socket.io-client";
+import io from "socket.io-client"; // Import socket.io-client
 
 interface Message {
   id: number;
@@ -46,12 +46,12 @@ export default function GroupChatScreen() {
 
     // Debugging: Log the connection status
     socket.current.on("connect", () => {
-      console.log("Connected to Socket.IO server with ID:", socket.current.id);  // Debugging log for successful connection
+      console.log(`Connected to Socket.IO server with ID: ${socket.current.id}`);
     });
 
     // Listen for new messages from the socket
     socket.current.on("new_message", (newMessage: Message) => {
-      console.log("Received new message:", newMessage);  // Debugging log for received messages
+      console.log("Received new message:", newMessage);  // Debug log
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
@@ -97,6 +97,7 @@ export default function GroupChatScreen() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/messages`);
       const data = await response.json();
+      console.log("Fetched messages:", data);  // Debugging: Log fetched messages
       setMessages(data.map((msg: any) => ({
         id: msg.id,
         senderId: msg.senderid,
@@ -133,9 +134,8 @@ export default function GroupChatScreen() {
         timestamp: new Date().toISOString(),
       };
 
-      console.log("Sending message:", newMessage); // Debugging log for the message being sent
-
       try {
+        console.log("Sending message:", newMessage); // Debugging: Log message before sending
         const response = await fetch(`${BACKEND_URL}/api/chat/messages`, {
           method: "POST",
           headers: {
@@ -145,8 +145,8 @@ export default function GroupChatScreen() {
         });
 
         if (response.ok) {
-          socket.current.emit("new_message", newMessage); // Emit the message to server
-          console.log("Message emitted to socket.io"); // Debugging log for message emitted
+          console.log("Message sent successfully"); // Debugging: Log success
+          socket.current.emit("new_message", newMessage); // Broadcast the message
 
           setMessages((prevMessages) => [...prevMessages, newMessage]);
           setMessage("");

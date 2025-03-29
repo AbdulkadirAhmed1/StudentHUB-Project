@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db/index");
-const io = require("../server"); // Import socket.io server instance
 
-// Get all messages from the database
+// Route to get all messages
 router.get("/messages", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM messages ORDER BY timestamp ASC");
+    const result = await pool.query("SELECT * FROM messages ORDER BY timestamp DESC");
+    console.log("Fetched messages from DB:", result.rows); // Debugging log
     res.json(result.rows);
   } catch (error) {
     console.error("Error fetching messages:", error);
@@ -14,28 +14,19 @@ router.get("/messages", async (req, res) => {
   }
 });
 
-// Post a new message to the database and broadcast to all clients
+// Route to add a new message
 router.post("/messages", async (req, res) => {
+  const { senderName, senderYear, senderProgram, content } = req.body;
   try {
-    const { senderId, senderName, senderYear, senderProgram, content } = req.body;
-
-    if (!senderId || !content) {
-      return res.status(400).json({ error: "Sender ID and content are required" });
-    }
-
-    // Insert the new message into the database
     const result = await pool.query(
-      "INSERT INTO messages (senderId, senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *",
-      [senderId, senderName, senderYear, senderProgram, content]
+      "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
+      [senderName, senderYear, senderProgram, content]
     );
 
-    const newMessage = result.rows[0];
+    console.log("New message inserted:", result.rows[0]); // Debugging log
 
-    // Broadcast the new message to all connected clients via Socket.IO
-    io.emit("new_message", newMessage);
-
-    // Respond with the newly saved message
-    res.status(201).json(newMessage);
+    const savedMessage = result.rows[0];
+    res.json(savedMessage); // Send the saved message back
   } catch (error) {
     console.error("Error saving message:", error);
     res.status(500).json({ error: "Failed to save message" });
