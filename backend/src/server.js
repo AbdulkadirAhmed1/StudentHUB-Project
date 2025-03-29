@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("StudentHUB Backend is running...");
 });
 
-// Mount Routes
+// Mount Routes (including courses, auth, and chat)
 app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/chat", chatRouter); // Chat routes to handle messages

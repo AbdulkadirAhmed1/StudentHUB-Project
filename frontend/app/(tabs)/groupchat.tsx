@@ -157,6 +157,8 @@ export default function GroupChatScreen() {
         }
       } catch (error) {
         console.error("❌ Error sending message:", error);
+        // Retry the message if it fails
+        setTimeout(() => sendMessage(), 3000); // Retry after 3 seconds
       }
     }
   };
