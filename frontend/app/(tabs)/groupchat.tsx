@@ -38,14 +38,12 @@ export default function GroupChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  // Initialize Socket.IO connection to Render Backend
   const socket = useRef(io("https://studenthub-project.onrender.com", { transports: ["websocket"] }));
 
   useEffect(() => {
     loadUserDetails();
     fetchMessages();
 
-    // Debugging: Log the connection status
     socket.current.on("connect", () => {
       console.log(`Connected to Socket.IO server with ID: ${socket.current.id}`);
     });
@@ -56,7 +54,6 @@ export default function GroupChatScreen() {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    // Setup keyboard listeners for proper scrolling
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardVisible(true);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
@@ -70,11 +67,10 @@ export default function GroupChatScreen() {
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
-      socket.current.disconnect(); // Disconnect when component unmounts
+      socket.current.disconnect();
     };
-  }, []); 
+  }, []);
 
-  // Load user details from AsyncStorage
   const loadUserDetails = async () => {
     try {
       const user = await AsyncStorage.getItem("currentUser");
@@ -93,12 +89,10 @@ export default function GroupChatScreen() {
     }
   };
 
-  // Fetch all messages from the backend to display in the chat
   const fetchMessages = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/messages`);
       const data = await response.json();
-      console.log("Fetched messages:", data);
       setMessages(data.map((msg: any) => ({
         id: msg.id,
         senderId: msg.senderid,
@@ -127,7 +121,7 @@ export default function GroupChatScreen() {
     if (message.trim()) {
       const newMessage: Message = {
         id: Date.now(),
-        senderId: 1,
+        senderId: 1, // Adjust to user ID if necessary
         senderName: username || "Guest",
         senderYear: userYear || "Unknown",
         senderProgram: userProgram || "Unknown",
@@ -147,11 +141,10 @@ export default function GroupChatScreen() {
 
         if (response.ok) {
           console.log("Message sent successfully");
-          socket.current.emit("new_message", newMessage); // Broadcast the message
+          socket.current.emit("new_message", newMessage);
           setMessages((prevMessages) => [...prevMessages, newMessage]);
           setMessage("");
           setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
-          setTimeout(() => inputRef.current?.focus(), 100);
         } else {
           console.error("Failed to send message");
         }
@@ -167,7 +160,6 @@ export default function GroupChatScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
           <Text style={styles.header}>Group Chat</Text>
 
-          {/* Display login prompt if user is not logged in */}
           {!isLoggedIn ? (
             <View style={styles.loginPromptContainer}>
               <Text style={styles.loginPromptText}>You must be logged in to join the chat. Please log in first.</Text>

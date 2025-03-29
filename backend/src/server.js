@@ -3,52 +3,49 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const socketIo = require("socket.io");
-const pool = require("./db/index"); // Database connection pool
+const pool = require("./db/index"); // Ensure you have a connection to the DB
 
 const app = express();
-const server = http.createServer(app);  // Create HTTP server using Express
+const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*",  // Allow all origins (adjust for production)
+    origin: "*", // Allowing all origins (for development purposes)
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
   }
 });
 
 const PORT = process.env.PORT || 5001;
 
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors());
 
-// Default test route
+// Example route (you can adjust as per your needs)
 app.get("/", (req, res) => {
-  res.send("StudentHUB Backend is running...");
+  res.send("Server is up and running");
 });
 
-// Handle socket connections
+// Listen for socket connections
 io.on("connection", (socket) => {
-  console.log("A user connected with socket ID:", socket.id);
+  console.log(`New connection: ${socket.id}`);
 
-  // Handle new messages
-  socket.on("new_message", async (newMessage) => {
-    console.log("Received new message:", newMessage);
+  // Handle incoming messages
+  socket.on("new_message", async (message) => {
+    console.log("Received message:", message);
 
     try {
-      const { senderName, senderYear, senderProgram, content } = newMessage;
+      // Save message to the database
+      const { senderName, senderYear, senderProgram, content } = message;
 
-      // Save the message to the database
       const result = await pool.query(
         "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
         [senderName, senderYear, senderProgram, content]
       );
 
-      const savedMessage = result.rows[0]; // Get the saved message from DB
+      const savedMessage = result.rows[0]; // Get the saved message from the database
+      console.log("Saved message:", savedMessage);
 
-      // Broadcast the saved message to all connected clients
-      io.emit("new_message", savedMessage);
-      console.log("Broadcasted new message to all clients.");
-
+      // Emit the message to all connected clients
+      io.emit("new_message", savedMessage); // Broadcast to all clients
     } catch (error) {
       console.error("Error saving message:", error);
     }
@@ -59,7 +56,7 @@ io.on("connection", (socket) => {
     console.log("A user disconnected:", socket.id);
   });
 
-  // Handle errors
+  // Error handling for socket
   socket.on("error", (error) => {
     console.error("Socket error:", error);
   });
