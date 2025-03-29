@@ -39,23 +39,20 @@ io.on("connection", (socket) => {
 
   socket.on("new_message", async (msg) => {
     try {
-      const { senderName, senderYear, senderProgram, content, senderId } = msg;
+      const { senderName, senderProgram, content, senderId } = msg;
 
-      // Check if sender details are valid before inserting
-      if (!senderName || !senderYear || !senderProgram || !senderId) {
+      if (!senderName || !senderProgram || !content || !senderId) {
         console.error("Invalid message data:", msg);
         return;
       }
 
-      // Insert the new message into the database
       const result = await pool.query(
-        "INSERT INTO messages (senderName, senderYear, senderProgram, content, senderId, timestamp) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *",
-        [senderName, senderYear, senderProgram, content, senderId]
+        "INSERT INTO messages (senderName, senderProgram, content, senderId, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
+        [senderName, senderProgram, content, senderId]
       );
 
       const savedMessage = result.rows[0];
 
-      // Emit the message to all connected clients
       io.emit("new_message", savedMessage);
     } catch (error) {
       console.error("Failed to save or emit message:", error);
