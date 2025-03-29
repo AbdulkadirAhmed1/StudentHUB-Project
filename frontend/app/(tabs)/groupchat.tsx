@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "@/constants/api"; // Make sure this is pointing to Render backend
+import { BACKEND_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import io from "socket.io-client"; // Import socket.io-client
+import io from "socket.io-client";
 
 interface Message {
   id: number;
@@ -38,8 +38,7 @@ export default function GroupChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  // Use Render's backend URL for socket connection
-  const socket = useRef(io(`${BACKEND_URL.replace("http", "wss")}`, { transports: ["websocket"] }));
+  const socket = useRef(io("https://studenthub-project.onrender.com", { transports: ["websocket"] }));
 
   useEffect(() => {
     loadUserDetails();
@@ -47,12 +46,12 @@ export default function GroupChatScreen() {
 
     // Debugging: Log the connection status
     socket.current.on("connect", () => {
-      console.log(`Connected to Socket.IO server with ID: ${socket.current.id}`);
+      console.log("Connected to Socket.IO server with ID:", socket.current.id);  // Debugging log for successful connection
     });
 
     // Listen for new messages from the socket
     socket.current.on("new_message", (newMessage: Message) => {
-      console.log("Received new message:", newMessage);  // Debug log
+      console.log("Received new message:", newMessage);  // Debugging log for received messages
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
@@ -134,6 +133,8 @@ export default function GroupChatScreen() {
         timestamp: new Date().toISOString(),
       };
 
+      console.log("Sending message:", newMessage); // Debugging log for the message being sent
+
       try {
         const response = await fetch(`${BACKEND_URL}/api/chat/messages`, {
           method: "POST",
@@ -144,7 +145,8 @@ export default function GroupChatScreen() {
         });
 
         if (response.ok) {
-          socket.current.emit("new_message", newMessage); // Broadcast the message
+          socket.current.emit("new_message", newMessage); // Emit the message to server
+          console.log("Message emitted to socket.io"); // Debugging log for message emitted
 
           setMessages((prevMessages) => [...prevMessages, newMessage]);
           setMessage("");

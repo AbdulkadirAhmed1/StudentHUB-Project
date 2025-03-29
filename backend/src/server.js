@@ -2,23 +2,18 @@ require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-const socketIo = require("socket.io"); // Import socket.io
-const pool = require("./db/index"); // Assuming this is for database connection
-
-// Import Routes
-const coursesRouter = require("./routes/courses");
-const authRouter = require("./routes/auth");
-const chatRouter = require("./routes/chat");
+const socketIo = require("socket.io");
+const pool = require("./db/index");
 
 const app = express();
-const server = http.createServer(app);  // Create HTTP server using Express
+const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*",  // Allow all origins (you can change this to your frontend URL for production)
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
-  }
+  },
 });
 
 const PORT = process.env.PORT || 5001;
@@ -36,47 +31,43 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from StudentHUB Backend!" });
 });
 
-// Mount Routes
-app.use("/api/courses", coursesRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/chat", chatRouter); // Chat routes to handle messages
-
 // Socket.IO connection management
 io.on("connection", (socket) => {
-  console.log("A user connected with socket ID:", socket.id);
+  console.log("A user connected with socket ID:", socket.id);  // Debugging log for connection
 
   // Handle new messages from users
   socket.on("new_message", async (newMessage) => {
-    console.log("New message received:", newMessage);
+    console.log("New message received:", newMessage); // Debugging log for the incoming message
 
-    // Optionally, store the message in the database
     try {
       const { senderName, senderYear, senderProgram, content } = newMessage;
 
-      // Insert the new message into the database
+      // Save message to database
       const result = await pool.query(
         "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
         [senderName, senderYear, senderProgram, content]
       );
 
-      const savedMessage = result.rows[0]; // Get the saved message
+      const savedMessage = result.rows[0]; // Get the saved message from DB
+      console.log("Saved message to DB:", savedMessage); // Debugging log for the saved message
 
       // Broadcast the message to all connected clients
-      io.emit("new_message", savedMessage);
+      io.emit("new_message", savedMessage);  // Broadcasting to all connected clients
+      console.log("Broadcasted new message:", savedMessage); // Debugging log for broadcasting
 
     } catch (error) {
-      console.error("Error saving message:", error);
+      console.error("Error saving message:", error);  // Debugging log for errors
     }
   });
 
   // Handle socket disconnect
   socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
+    console.log("A user disconnected:", socket.id);  // Debugging log for user disconnection
   });
 
-  // Handle errors in socket connection
-  socket.on("error", (error) => {
-    console.error("Socket error:", error);
+  // Handle socket errors
+  socket.on("error", (err) => {
+    console.error("Socket error:", err);  // Debugging log for socket errors
   });
 });
 
