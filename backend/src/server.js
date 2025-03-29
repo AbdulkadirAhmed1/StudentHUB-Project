@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/chat", chatRouter); // Chat routes
+app.use("/api/chat", chatRouter);
 
 // SOCKET.IO LOGIC
 io.on("connection", (socket) => {
@@ -39,17 +39,23 @@ io.on("connection", (socket) => {
 
   socket.on("new_message", async (msg) => {
     try {
-      const { senderName, senderYear, senderProgram, content } = msg;
+      const { senderName, senderYear, senderProgram, content, senderId } = msg;
 
-      // Save the new message to the database
+      // Check if sender details are valid before inserting
+      if (!senderName || !senderYear || !senderProgram || !senderId) {
+        console.error("Invalid message data:", msg);
+        return;
+      }
+
+      // Insert the new message into the database
       const result = await pool.query(
-        "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
-        [senderName, senderYear, senderProgram, content]
+        "INSERT INTO messages (senderName, senderYear, senderProgram, content, senderId, timestamp) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *",
+        [senderName, senderYear, senderProgram, content, senderId]
       );
 
       const savedMessage = result.rows[0];
 
-      // Emit the saved message to all connected clients
+      // Emit the message to all connected clients
       io.emit("new_message", savedMessage);
     } catch (error) {
       console.error("Failed to save or emit message:", error);
