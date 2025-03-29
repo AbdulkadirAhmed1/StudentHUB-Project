@@ -11,7 +11,7 @@ const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
 
 const app = express();
-const server = http.createServer(app);  // Create HTTP server using Express
+const server = http.createServer(app); // Create HTTP server using Express
 const io = socketIo(server, {
   cors: {
     origin: "*",  // Allow all origins (adjust for production)
