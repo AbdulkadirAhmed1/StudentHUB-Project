@@ -3,22 +3,21 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const socketIo = require("socket.io");
-const pool = require("./db/index"); // Database connection pool
+const pool = require("./db/index");
 
-// Import Routes
 const coursesRouter = require("./routes/courses");
 const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server using Express
+const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Allow all origins (adjust for production)
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
-  }
+  },
 });
 
 const PORT = process.env.PORT || 5001;
@@ -26,62 +25,39 @@ const PORT = process.env.PORT || 5001;
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 
-// Default test route
 app.get("/", (req, res) => {
   res.send("StudentHUB Backend is running...");
 });
 
-// Mount Routes
 app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/chat", chatRouter); // Chat routes to handle messages
+app.use("/api/chat", chatRouter);
 
-// Socket.IO connection management
+// SOCKET.IO LOGIC
 io.on("connection", (socket) => {
-  console.log("A user connected with socket ID:", socket.id); // Debugging log
+  console.log("User connected:", socket.id);
 
-  // Handle new messages from users
-  socket.on("new_message", async (newMessage) => {
-    console.log("Received new message:", newMessage); // Debugging log
-
+  socket.on("new_message", async (msg) => {
     try {
-      const { senderName, senderYear, senderProgram, content } = newMessage;
+      const { senderName, senderYear, senderProgram, content } = msg;
 
-      if (!senderName || !senderYear || !senderProgram) {
-        console.error("Message is missing necessary user details.");
-        return;
-      }
-
-      // Insert the new message into the database
       const result = await pool.query(
         "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
         [senderName, senderYear, senderProgram, content]
       );
 
-      const savedMessage = result.rows[0]; // Get the saved message
-      console.log("Saved message:", savedMessage); // Debugging log
-
-      // Broadcast the message to all connected clients
+      const savedMessage = result.rows[0];
       io.emit("new_message", savedMessage);
-      console.log("Broadcasted new message to all clients."); // Debugging log
-
     } catch (error) {
-      console.error("Error saving message:", error);
+      console.error("Failed to save or emit message:", error);
     }
   });
 
-  // Handle socket disconnect
   socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id); // Debugging log
-  });
-
-  // Handle errors in socket connection
-  socket.on("error", (error) => {
-    console.error("Socket error:", error); // Debugging log
+    console.log("User disconnected:", socket.id);
   });
 });
 
-// Start the server
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
