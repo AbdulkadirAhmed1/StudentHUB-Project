@@ -17,6 +17,12 @@ router.get("/messages", async (req, res) => {
 // Route to add a new message
 router.post("/messages", async (req, res) => {
   const { senderName, senderYear, senderProgram, content } = req.body;
+
+  // Validate required fields
+  if (!senderName || !senderYear || !senderProgram || !content) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
   try {
     const result = await pool.query(
       "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
