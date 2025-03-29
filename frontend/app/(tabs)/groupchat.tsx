@@ -38,6 +38,7 @@ export default function GroupChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+  // Initialize Socket.IO connection to Render Backend
   const socket = useRef(io("https://studenthub-project.onrender.com", { transports: ["websocket"] }));
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function GroupChatScreen() {
 
     // Listen for new messages from the socket
     socket.current.on("new_message", (newMessage: Message) => {
-      console.log("Received new message:", newMessage);  // Debug log
+      console.log("Received new message:", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
@@ -73,7 +74,7 @@ export default function GroupChatScreen() {
     };
   }, []); 
 
-  // Load user details from AsyncStorage to check if the user is logged in
+  // Load user details from AsyncStorage
   const loadUserDetails = async () => {
     try {
       const user = await AsyncStorage.getItem("currentUser");
@@ -97,7 +98,7 @@ export default function GroupChatScreen() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/messages`);
       const data = await response.json();
-      console.log("Fetched messages:", data);  // Debugging: Log fetched messages
+      console.log("Fetched messages:", data);
       setMessages(data.map((msg: any) => ({
         id: msg.id,
         senderId: msg.senderid,
@@ -126,16 +127,16 @@ export default function GroupChatScreen() {
     if (message.trim()) {
       const newMessage: Message = {
         id: Date.now(),
-        senderId: 1, // Adjust to user ID if necessary
-        senderName: username || "Guest", // Set fallback for username if null
-        senderYear: userYear || "Unknown", // Fallback for year if empty
-        senderProgram: userProgram || "Unknown", // Fallback for program if empty
+        senderId: 1,
+        senderName: username || "Guest",
+        senderYear: userYear || "Unknown",
+        senderProgram: userProgram || "Unknown",
         content: message,
         timestamp: new Date().toISOString(),
       };
 
       try {
-        console.log("Sending message:", newMessage); // Debugging: Log message before sending
+        console.log("Sending message:", newMessage);
         const response = await fetch(`${BACKEND_URL}/api/chat/messages`, {
           method: "POST",
           headers: {
@@ -145,9 +146,8 @@ export default function GroupChatScreen() {
         });
 
         if (response.ok) {
-          console.log("Message sent successfully"); // Debugging: Log success
+          console.log("Message sent successfully");
           socket.current.emit("new_message", newMessage); // Broadcast the message
-
           setMessages((prevMessages) => [...prevMessages, newMessage]);
           setMessage("");
           setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
