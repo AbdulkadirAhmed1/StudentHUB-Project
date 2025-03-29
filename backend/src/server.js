@@ -1,13 +1,26 @@
 require("dotenv").config();
 const express = require("express");
+const http = require("http");
 const cors = require("cors");
-const pool = require("./db/index");
+const socketIo = require("socket.io"); // Import socket.io
+const pool = require("./db/index"); // Assuming this is for database connection
 
+// Import Routes
 const coursesRouter = require("./routes/courses");
 const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
 
 const app = express();
+const server = http.createServer(app);  // Create HTTP server using Express
+const io = socketIo(server, {
+  cors: {
+    origin: "*",  // Allow all origins (you can change this to your frontend URL for production)
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  }
+});
+
 const PORT = process.env.PORT || 5001;
 
 app.use(express.json());
@@ -23,14 +36,51 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from StudentHUB Backend!" });
 });
 
-// Mount the courses router
+// Mount Routes
 app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
-
-// Mount API routes
 app.use("/api/chat", chatRouter); // Chat routes to handle messages
 
+// Socket.IO connection management
+io.on("connection", (socket) => {
+  console.log("A user connected with socket ID:", socket.id);
+
+  // Handle new messages from users
+  socket.on("new_message", async (newMessage) => {
+    console.log("New message received:", newMessage);
+
+    // Optionally, store the message in the database
+    try {
+      const { senderName, senderYear, senderProgram, content } = newMessage;
+
+      // Insert the new message into the database
+      const result = await pool.query(
+        "INSERT INTO messages (senderName, senderYear, senderProgram, content, timestamp) VALUES ($1, $2, $3, $4, NOW()) RETURNING *",
+        [senderName, senderYear, senderProgram, content]
+      );
+
+      const savedMessage = result.rows[0]; // Get the saved message
+
+      // Broadcast the message to all connected clients
+      io.emit("new_message", savedMessage);
+
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  });
+
+  // Handle socket disconnect
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+  });
+
+  // Handle errors in socket connection
+  socket.on("error", (error) => {
+    console.error("Socket error:", error);
+  });
+});
+
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
