@@ -1,35 +1,35 @@
-// src/server.js
-require("dotenv").config();
+require("dotenv").config(); // Load environment variables from .env
 const express = require("express");
 const cors = require("cors");
+const fetch = require("node-fetch");
+const pool = require("./db/index");
 
-// Routers
-const coursesRouter = require("./routes/courses"); // local DB route
+// Import Routes
+const coursesRouter = require("./routes/courses");
 const authRouter = require("./routes/auth");
-const advisingRouter = require("./routes/advising"); // advising routes
-const fetchcoursesRouter = require("./routes/fetchcourses"); // scraper route
+const chatRouter = require("./routes/chat");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Middlewares
-// Increase JSON body size limit to 50MB globally
-app.use(express.json({ limit: "50mb" }));
-app.use(cors());
+app.use(express.json());
+app.use(cors({ origin: "*" }));
 
-// Default route
+// Health check routes
 app.get("/", (req, res) => {
   res.send("StudentHUB Backend is running...");
 });
 
-// API Test Route
 app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from StudentHUB Backend!" });
 });
 
-// Mount your routers
-app.use("/api/courses", coursesRouter);      // local DB-based route
+// Mount API routes
+app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/advising", advisingRouter);    // advising routes
-app.use("/api/fetchcourses", fetchcoursesRouter); // scraper route
+app.use("/api/chat", chatRouter);
 
-module.exports = app;
+// Start the server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
