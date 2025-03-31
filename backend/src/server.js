@@ -2,12 +2,18 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const coursesRouter = require("./routes/courses");
+
+// Routers
+const coursesRouter = require("./routes/courses"); // local DB route
 const authRouter = require("./routes/auth");
+const advisingRouter = require("./routes/advising"); // advising routes
+const fetchcoursesRouter = require("./routes/fetchcourses"); // scraper route
 
 const app = express();
 
-app.use(express.json());
+// Middlewares
+// Increase JSON body size limit to 50MB globally
+app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
 // Default route
@@ -20,9 +26,10 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Hello from StudentHUB Backend!" });
 });
 
-// Mount the courses router
-app.use("/api/courses", coursesRouter);
+// Mount your routers
+app.use("/api/courses", coursesRouter);      // local DB-based route
 app.use("/api/auth", authRouter);
+app.use("/api/advising", advisingRouter);    // advising routes
+app.use("/api/fetchcourses", fetchcoursesRouter); // scraper route
 
-// Export app for tests (no .listen call here)
 module.exports = app;
