@@ -1,4 +1,4 @@
-mport { BACKEND_URL } from "@/constants/api";
+import { BACKEND_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 import React, { useEffect, useRef, useState } from "react";
