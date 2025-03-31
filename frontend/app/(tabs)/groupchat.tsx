@@ -1,5 +1,6 @@
 import { BACKEND_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createClient } from "@supabase/supabase-js";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
@@ -15,23 +16,34 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+// 🧠 Helper to format year as "2nd year"
+const getOrdinalYear = (year: string | number): string => {
+  const y = parseInt(year.toString());
+  const suffix = ["th", "st", "nd", "rd"];
+  const v = y % 100;
+  return y + (suffix[(v - 20) % 10] || suffix[v] || suffix[0]);
+};
+
 interface Message {
   id: number;
-  senderId: number;
-  senderName: string;
-  senderYear: string;
-  senderProgram: string;
+  senderid: number;
+  sendername: string;
+  senderyear: string;
+  senderprogram: string;
   content: string;
   timestamp: string;
 }
 
+const SUPABASE_URL = "https://ajnrpplvtzdfddybzaas.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqbnJwcGx2dHpkZmRkeWJ6YWFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MzI3ODY2MywiZXhwIjoyMDU4ODU0NjYzfQ.8yKzJNEA3DW-AAwkh95G-emKTJ-rLKFHerh9f64xzHc";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 export default function GroupChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Tracks if the user is logged in
-  const [username, setUsername] = useState<string | null>(null); // Username is null until logged in
-  const [userYear, setUserYear] = useState<string>(""); // Will be set after login
-  const [userProgram, setUserProgram] = useState<string>(""); // Will be set after login
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
   const inputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -41,108 +53,90 @@ export default function GroupChatScreen() {
     loadUserDetails();
     fetchMessages();
 
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+    const channel = supabase
+      .channel("realtime:public:supabase_messages")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "supabase_messages" },
+        (payload) => {
+          const newMsg = payload.new as Message;
+          console.log("📥 Realtime payload received:", newMsg);
+          setMessages((prev) => [...prev, newMsg]);
+          setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
+        }
+      )
+      .subscribe((status) => {
+        console.log("🛠️ Supabase Realtime channel status:", status);
+      });
+
+    const showSub = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardVisible(true);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
     });
 
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
       setKeyboardVisible(false);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
     });
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      showSub.remove();
+      hideSub.remove();
+      supabase.removeChannel(channel);
     };
   }, []);
 
-  // Load user details from AsyncStorage to check if the user is logged in
   const loadUserDetails = async () => {
     try {
       const user = await AsyncStorage.getItem("currentUser");
       if (user) {
-        const parsedUser = JSON.parse(user);
-        setUsername(parsedUser.username);
-        setUserYear(parsedUser.yearofstudy);
-        setUserProgram(parsedUser.program);
-        setIsLoggedIn(true); // User is logged in
+        const parsed = JSON.parse(user);
+        console.log("✅ Loaded user from storage:", parsed);
+        setUsername(parsed.username);
+        setCurrentUserId(parsed.id);
+        setIsLoggedIn(true);
       } else {
-        setIsLoggedIn(false); // No user found, logged out
+        setIsLoggedIn(false);
       }
-    } catch (error) {
-      console.error("Error loading user details", error);
-      setIsLoggedIn(false); // If error, assume user is not logged in
+    } catch (err) {
+      console.error("Error loading user:", err);
+      setIsLoggedIn(false);
     }
   };
 
-  // Fetch all messages from the backend to display in the chat
   const fetchMessages = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/chat/messages`);
-      const data = await response.json();
-
-      setMessages(
-        data.map((msg: any) => ({
-          id: msg.id,
-          senderId: msg.senderid,
-          senderName: msg.sendername || "Unknown",
-          senderYear: formatYear(msg.senderyear),
-          senderProgram: msg.senderprogram || "N/A",
-          content: msg.content,
-          timestamp: msg.timestamp,
-        }))
-      );
+      const res = await fetch(`${BACKEND_URL}/api/chat/messages`);
+      const data = await res.json();
+      console.log("🛠️ Messages fetch response:", data);
+      setMessages(data);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
+    } catch (err) {
+      console.error("❌ Error fetching messages:", err);
     }
   };
 
-  // Format the sender year into readable format
-  const formatYear = (year: string | number): string => {
-    const yearNum = Number(year);
-    if (isNaN(yearNum)) return `${year} Year`;
-    if (yearNum === 1) return "1st Year";
-    if (yearNum === 2) return "2nd Year";
-    if (yearNum === 3) return "3rd Year";
-    return `${yearNum}th Year`;
-  };
-
-  // Send the message to the backend and update the UI
   const sendMessage = async () => {
-    if (message.trim()) {
-      const newMessage: Message = {
-        id: Date.now(),
-        senderId: 1, // Adjust to user ID if necessary
-        senderName: username || "Guest", // Set fallback for username if null
-        senderYear: userYear || "Unknown", // Fallback for year if empty
-        senderProgram: userProgram || "Unknown", // Fallback for program if empty
-        content: message,
-        timestamp: new Date().toISOString(),
-      };
+    if (!message.trim() || !username) return;
+    const payload = { content: message, username };
+    console.log("📤 Sending message payload:", payload);
 
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/chat/messages`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newMessage),
-        });
-
-        if (response.ok) {
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
-          setMessage("");
-
-          setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
-          setTimeout(() => inputRef.current?.focus(), 100);
-        } else {
-          console.error("Failed to send message");
-        }
-      } catch (error) {
-        console.error("❌ Error sending message:", error);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/chat/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const posted = await res.text();
+        console.log("📨 Message POST response text:", posted);
+        setMessage("");
+        setTimeout(() => inputRef.current?.focus(), 100);
+      } else {
+        console.error("❌ Server error:", await res.text());
       }
+    } catch (err) {
+      console.error("❌ Network error:", err);
     }
   };
 
@@ -150,13 +144,10 @@ export default function GroupChatScreen() {
     <SafeAreaView style={styles.safeArea}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
           style={styles.container}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 0}
         >
           <Text style={styles.header}>Group Chat</Text>
-
-          {/* Display login prompt if user is not logged in */}
           {!isLoggedIn ? (
             <View style={styles.loginPromptContainer}>
               <Text style={styles.loginPromptText}>
@@ -168,29 +159,36 @@ export default function GroupChatScreen() {
               ref={scrollViewRef}
               style={styles.chatContainer}
               contentContainerStyle={styles.chatContent}
-              keyboardShouldPersistTaps="handled"
-              onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
             >
-              {messages.map((msg, index) => {
-                const isCurrentUser = msg.senderName === username;
-                const senderDetails = `${msg.senderName} (${msg.senderYear}, ${msg.senderProgram})`;
-
-                return (
-                  <View key={index} style={isCurrentUser ? styles.userMessage : styles.otherMessage}>
-                    <Text style={styles.senderName}>{senderDetails}</Text>
-                    <Text style={styles.messageText}>{msg.content}</Text>
-                    <Text style={styles.timestamp}>
-                      {new Date(msg.timestamp).toLocaleTimeString()}
-                    </Text>
-                  </View>
-                );
-              })}
+              {messages.map((msg, i) => (
+                <View
+                  key={i}
+                  style={
+                    msg.senderid === currentUserId
+                      ? styles.userMessage
+                      : styles.otherMessage
+                  }
+                >
+                  <Text style={styles.senderName}>
+                    {`${msg.sendername} (${getOrdinalYear(
+                      msg.senderyear
+                    )} year, ${msg.senderprogram})`}
+                  </Text>
+                  <Text style={styles.messageText}>{msg.content}</Text>
+                  <Text style={styles.timestamp}>
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                  </Text>
+                </View>
+              ))}
             </ScrollView>
           )}
-
-          {/* Only show message input box if logged in */}
           {isLoggedIn && (
-            <View style={[styles.inputContainer, isKeyboardVisible && styles.inputContainerShift]}>
+            <View
+              style={[
+                styles.inputContainer,
+                isKeyboardVisible && styles.inputContainerShift,
+              ]}
+            >
               <TextInput
                 ref={inputRef}
                 style={styles.input}
@@ -198,8 +196,6 @@ export default function GroupChatScreen() {
                 onChangeText={setMessage}
                 placeholder="Type your message..."
                 placeholderTextColor="#999"
-                returnKeyType="send"
-                onFocus={() => setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100)}
               />
               <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
                 <Text style={styles.sendButtonText}>Send</Text>
@@ -215,10 +211,14 @@ export default function GroupChatScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "white" },
   container: { flex: 1, paddingHorizontal: 10, justifyContent: "space-between" },
-  header: { fontSize: 18, fontWeight: "bold", textAlign: "center", marginVertical: 5 },
+  header: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 5,
+  },
   chatContainer: { flex: 1, width: "100%" },
   chatContent: { paddingBottom: 150 },
-
   userMessage: {
     alignSelf: "flex-end",
     backgroundColor: "#DCF8C6",
@@ -239,11 +239,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 2, // Small spacing
+    marginBottom: 2,
   },
   messageText: { fontSize: 14, color: "#000" },
-  timestamp: { fontSize: 10, color: "gray", alignSelf: "flex-end", marginTop: 4 },
-
+  timestamp: {
+    fontSize: 10,
+    color: "gray",
+    alignSelf: "flex-end",
+    marginTop: 4,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -257,11 +261,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
   },
-
   inputContainerShift: {
     bottom: Platform.OS === "ios" ? 110 : 50,
   },
-
   input: {
     flex: 1,
     borderWidth: 1,
@@ -272,11 +274,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginRight: 8,
   },
-
-  sendButton: { padding: 8, backgroundColor: "#007BFF", borderRadius: 12 },
+  sendButton: {
+    padding: 8,
+    backgroundColor: "#007BFF",
+    borderRadius: 12,
+  },
   sendButtonText: { color: "white", fontWeight: "bold", fontSize: 12 },
-
-  // Style for the login prompt
   loginPromptContainer: {
     flex: 1,
     justifyContent: "center",
