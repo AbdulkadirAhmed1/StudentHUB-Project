@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "@/constants/api";
+mport { BACKEND_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
 import React, { useEffect, useRef, useState } from "react";
@@ -198,13 +198,16 @@ export default function GroupChatScreen() {
               ]}
             >
               <TextInput
-                ref={inputRef}
-                style={styles.input}
-                value={message}
-                onChangeText={setMessage}
-                placeholder="Type your message..."
-                placeholderTextColor="#999"
-              />
+              ref={inputRef}
+              style={styles.input}
+              value={message}
+              onChangeText={setMessage}
+              placeholder="Type your message..."
+              placeholderTextColor="#999"
+              returnKeyType="send"
+              onSubmitEditing={sendMessage} // 🔥 This makes Enter key send the message
+              onFocus={() => setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100)}
+/>
               <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
                 <Text style={styles.sendButtonText}>Send</Text>
               </TouchableOpacity>
