@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-// 🧠 Helper to format year as "2nd year"
+//Converts numeric year to ordinal string
 const getOrdinalYear = (year: string | number): string => {
   const y = parseInt(year.toString());
   const suffix = ["th", "st", "nd", "rd"];
@@ -24,6 +24,8 @@ const getOrdinalYear = (year: string | number): string => {
   return y + (suffix[(v - 20) % 10] || suffix[v] || suffix[0]);
 };
 
+
+// Type for message objects
 interface Message {
   id: number;
   senderid: number;
@@ -34,6 +36,7 @@ interface Message {
   timestamp: string;
 }
 
+// Supabase config
 const SUPABASE_URL = "https://ajnrpplvtzdfddybzaas.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqbnJwcGx2dHpkZmRkeWJ6YWFzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MzI3ODY2MywiZXhwIjoyMDU4ODU0NjYzfQ.8yKzJNEA3DW-AAwkh95G-emKTJ-rLKFHerh9f64xzHc";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -53,6 +56,7 @@ export default function GroupChatScreen() {
     loadUserDetails();
     fetchMessages();
 
+    // Subscribe to Supabase Realtime for new message inserts
     const channel = supabase
       .channel("realtime:public:supabase_messages")
       .on(
@@ -69,6 +73,7 @@ export default function GroupChatScreen() {
         console.log("🛠️ Supabase Realtime channel status:", status);
       });
 
+    // Scroll when keyboard shows/hides
     const showSub = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardVisible(true);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
@@ -86,6 +91,7 @@ export default function GroupChatScreen() {
     };
   }, []);
 
+  // Load user info from AsyncStorage
   const loadUserDetails = async () => {
     try {
       const user = await AsyncStorage.getItem("currentUser");
@@ -104,6 +110,7 @@ export default function GroupChatScreen() {
     }
   };
 
+  // Fetch initial messages from backend
   const fetchMessages = async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/chat/messages`);
@@ -116,6 +123,7 @@ export default function GroupChatScreen() {
     }
   };
 
+  // Send new message to backend
   const sendMessage = async () => {
     if (!message.trim() || !username) return;
     const payload = { content: message, username };
