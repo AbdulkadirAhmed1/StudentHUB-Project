@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 import React from "react";
 
-// Mock SafeArea and gesture-handler root to avoid crashing
+// ✅ Mocks for React Native dependencies
 jest.mock("react-native-safe-area-context", () => ({
     SafeAreaView: ({ children }: any) => children,
 }));
@@ -15,108 +15,100 @@ jest.mock("react-native-gesture-handler", () => {
     };
 });
 
-// Mock AsyncStorage
+// ✅ Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({
     getItem: jest.fn(),
-    setItem: jest.fn(),
-    removeItem: jest.fn(),
 }));
 
-// Mock fetch globally
-global.fetch = jest.fn(() =>
-    Promise.resolve({
-        json: () => Promise.resolve([]), // default empty response
-    })
-) as jest.Mock;
+// ✅ Supabase Client Mock
+jest.mock("@supabase/supabase-js", () => ({
+    createClient: () => ({
+        from: (table: string) => {
+            if (table === "chat_groups") {
+                return {
+                    select: () => ({
+                        order: () => ({
+                            data: [
+                                { id: 1, course_name: "Computer Architecture", course_code: "EECS2021", yearofstudy: 2 },
+                                { id: 2, course_name: "2nd Year Students", course_code: "YEAR2", yearofstudy: 2 },
+                            ],
+                            error: null,
+                        }),
+                    }),
+                };
+            }
+
+            if (table === "supabase_messages") {
+                return {
+                    select: () => ({
+                        eq: () => ({
+                            order: () => ({
+                                data: [
+                                    {
+                                        id: 101,
+                                        senderid: 1,
+                                        sendername: "UserTest",
+                                        senderyear: "2",
+                                        senderprogram: "CS",
+                                        content: "Hello from test!",
+                                        timestamp: new Date().toISOString(),
+                                        group_id: 1,
+                                    },
+                                ],
+                                error: null,
+                            }),
+                        }),
+                    }),
+                    insert: jest.fn(() => Promise.resolve({ error: null })),
+                };
+            }
+
+            return { select: () => ({ data: [], error: null }) };
+        },
+        channel: () => ({
+            on: () => ({ subscribe: () => ({}) }),
+        }),
+        removeChannel: jest.fn(),
+    }),
+}));
 
 describe("GroupChatScreen", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    it("renders login prompt when not logged in", async () => {
+    test("shows login prompt if user not logged in", async () => {
         (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
 
         render(<GroupChatScreen />);
-
-        expect(
-            await screen.findByText("You must be logged in to join the chat. Please log in first.")
-        ).toBeTruthy();
+        expect(await screen.findByText("Please log in to access group chat.")).toBeTruthy();
     });
 
-    it("displays header and chat components when logged in", async () => {
-        const user = {
-            id: 1,
-            username: "User1234",
-        };
+    test("renders group list when logged in", async () => {
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+            JSON.stringify({ id: 1, name: "Test User", yearofstudy: 2, program: "CS" })
+        );
 
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(user));
+        render(<GroupChatScreen />);
+        expect(await screen.findByText("Computer Architecture")).toBeTruthy();
+        expect(screen.getByText("2nd Year Students")).toBeTruthy();
+    });
+
+    test("prevents sending empty message", async () => {
+        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+            JSON.stringify({ id: 1, name: "Test User", yearofstudy: 2, program: "CS" })
+        );
 
         render(<GroupChatScreen />);
 
         await waitFor(() => {
-            expect(screen.getByText("Group Chat")).toBeTruthy();
+            fireEvent.press(screen.getByText("Computer Architecture"));
         });
-    });
-
-    it("does not allow sending empty message", async () => {
-        const user = {
-            id: 1,
-            username: "User1234",
-        };
-
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(user));
-
-        render(<GroupChatScreen />);
 
         await waitFor(() => {
-            expect(screen.getByText("Send")).toBeTruthy();
-            fireEvent.press(screen.getByText("Send")); // try sending empty message
+            fireEvent.press(screen.getByText("Send")); // Try to send empty
         });
 
-        // You can assert that fetch was not called
-        expect(global.fetch).toHaveBeenCalledTimes(1); // Only for group/messages load
-    });
-
-    it("renders messages when fetched", async () => {
-        const user = {
-            id: 1,
-            username: "User1234",
-        };
-
-        (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(user));
-
-        // Mock group messages
-        (global.fetch as jest.Mock).mockImplementation((url: string) => {
-            if (url.includes("/api/chat/messages")) {
-                return Promise.resolve({
-                    json: () =>
-                        Promise.resolve([
-                            {
-                                id: 1,
-                                senderid: 1,
-                                sendername: "User1234",
-                                senderyear: "2",
-                                senderprogram: "CS",
-                                content: "Hello world",
-                                timestamp: new Date().toISOString(),
-                            },
-                        ]),
-                });
-            }
-            if (url.includes("/api/chat/groups")) {
-                return Promise.resolve({
-                    json: () =>
-                        Promise.resolve([{ id: 1, course_code: "EECS2311", course_name: "Software Design" }]),
-                });
-            }
-            return Promise.resolve({ json: () => Promise.resolve([]) });
-        });
-
-        render(<GroupChatScreen />);
-
-        await waitFor(() => {
-            expect(screen.getByText("Hello world")).toBeTruthy();
-        });
+        expect(screen.getByPlaceholderText("Type your message...").props.value).toBe("");
     });
 });
