@@ -13,7 +13,7 @@ The **installation process is straightforward**, but **understanding how the pro
 - At a **high level**, getting the app up and running is simple—just follow the setup instructions.  
 - At a **low level**, this project follows a **long-term roadmap**, structured into **generations**, each improving the app step by step.  
 
-This journey started as a small idea and grew into a **structured, multi-generation vision**. If you're curious about how far it's come, check out **[BRAINSTORMING.txt](StudentHUB-Project/BRAINSTORMING)**—it's a cool reminder of how ideas evolve over time.  
+This journey started as a small idea and grew into a **structured, multi-generation vision**. If you're curious about how far it's come, check out **[BRAINSTORMING.txt](StudentHUB-Project/BRAINSTORMING.txt)**—it's a cool reminder of how ideas evolve over time.  
 
 📌 **How It Started vs. How It's Going**  
 - **BRAINSTORMING.txt** is where the first thoughts were put together—back then, the **platform (website vs. mobile app) was undecided**, and the **database-backend connection was uncertain**.  
