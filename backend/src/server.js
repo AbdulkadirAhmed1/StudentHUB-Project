@@ -3,15 +3,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
-// Existing routers
-const coursesRouter = require("./routes/courses");
-const advisingRouter = require("./routes/advising");
-
-// NEW route for scraping coursedelta.yorku.dev
-// (You’d create this file at src/routes/fetchcourses.js)
-const fetchCoursesRouter = require("./routes/fetchcourses");
-
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -31,6 +22,7 @@ app.get("/api/test", (req, res) => {
 
 // Mount the courses router
 app.use("/api/courses", coursesRouter);
+app.use("/api/auth", authRouter);
 
 // Mount the advising router
 app.use("/api/advising", advisingRouter);
