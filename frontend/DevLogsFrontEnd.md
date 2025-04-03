@@ -237,9 +237,57 @@
 
 ---
 
+### Log 1.8 4/3/2025
+
+- **New Register/Login Feature Implementation**:
+  - **Login Page**:
+    - Implemented a simple login page with fields for **Username** and **Password**.
+    - A **Register** button is available at the bottom for navigation to the registration page.
+    - **Screenshot**:  
+      ![Login Page](https://i.imgur.com/zZQzXgA.png)
+      
+  - **Register Page**:
+    - Provides four input fields: **Username**, **Password**, **Year of Study**, and **Field of Study**.
+    - **Validation Rules**:
+      - **Username**: Must be more than 6 characters and less than 14 characters.
+      - **Password**: Must be greater than 6 characters and less than 14 characters.
+      - **Year of Study**: Must be a number between 1 and 20.
+      - **Field of Study**: Currently free-form, but will be refined in future updates (e.g., scrollable UI for undergraduates).
+    - **Screenshots**:
+      - **Unfilled Register Page**:  
+        ![Register Page Unfilled](https://i.imgur.com/ySWacqH.png)
+      - **Filled Register Page**:  
+        ![Register Page Filled](https://i.imgur.com/qKKQPbD.png)
+        
+  - **User Profile Page**:
+    - Upon successful registration or login, the user is taken to a profile page.
+    - This page displays the user's **Username**, **Year of Study**, and **Field of Study**.
+    - It includes options for **Logout** and **Delete Account**.
+    - **Screenshot**:  
+      ![User Profile Page](https://i.imgur.com/hxMherx.png)
+      
+- **Functionality Details**:
+  - **Login Process**:
+    - Simple authentication using the provided Username and Password.
+    - On successful login, user data is stored in AsyncStorage for auto-login persistence.
+  - **Registration Process**:
+    - Enforces strict validations: if any field is empty, or if inputs do not meet the length or numeric criteria, appropriate error messages are shown.
+    - Successful registration automatically logs the user in and displays the user profile.
+  - **User Profile**:
+    - Displays user details with options to **Logout** or **Delete Account**.
+    - Future updates will further refine the profile interface and add more functionalities.
+
+- **Testing and Verification**:
+  - Manual tests confirmed that:
+    - Users receive correct error messages when invalid data is entered.
+    - Successful registration and login lead to correct display of user profile information.
+    - Logout and Delete Account functionalities work as expected.
+
+---
+
 ## Reproduction Steps:
 
-### **Log 1.7  - Reproduction Steps**  
+### **Log 1.8  - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
@@ -255,20 +303,24 @@
      ```
    - Scan the **QR code** with the **Expo Go** app or open the app in the browser.
 
-3. **Calendar Tab Overhaul**:  
-   - Open the **Calendar tab**.
-   - Observe the **new UI layout** and **scrollable course list**.
-   - Click **"+ Add Course"** and **input valid details**.
+3. **Login Feature:**  
+- Open the Login page.
+- Enter a valid Username and Password.
+- Tap the "Register" button to navigate to the Registration page.
 
-4. **Test Course Addition**:  
-   - Add a course using the modal.
-   - Confirm that the course **instantly appears in the list**.
+4. **Registration Feature:**  
+- On the Registration page, first leave the fields empty to trigger validation errors.
+- Then fill in valid details, ensuring:
+  - **Username:** More than 6 characters and less than 14 characters.
+  - **Password:** Between 6 and 14 characters.
+  - **Year of Study:** A number between 1 and 20.
+- Tap "Submit Registration" and confirm that you are automatically logged in.
 
-5. **Test "+ Plot Calendar" Feature**:  
-   - Click **"📅 Plot Calendar"**.
-   - Ensure courses appear in their correct **time slots**.
+5. **User Profile Verification:**  
+- Verify that the User Profile page displays the correct details (Username, Year of Study, Field of Study).
+- Test the Logout and Delete Account functionalities to ensure they work as expected.
   
-6. **Run Jest Unit Tests** (Ensure test cases pass):  
+6. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
      ```bash
      npx expo start
      ```
@@ -399,3 +451,25 @@
 - **Enhance Course Input Validations**:
   - Add **professor names & room numbers** (Optional fields currently, but UI will show them).
   - Implement **better error handling messages** for user clarity.
+
+  ### Log 1.8 4/3/2025
+
+- **Refine User Profile UI**:
+  - Enhance clarity and usability with a redesigned layout.
+  - Ensure that user details (Username, Year of Study, Field of Study) are displayed in a clear and accessible manner.
+
+- **Implement Scrollable UI for Year Selection**:
+  - Develop a scrollable picker component for selecting the Year of Study (for undergraduates).
+  - Prevent invalid inputs by limiting selectable options appropriately.
+
+- **Enhance Error Messaging and Validation**:
+  - Improve error messages to provide detailed and user-friendly feedback.
+  - Refine input validation logic based on user testing to ensure consistency and clarity.
+
+- **Integrate Additional Security Improvements**:
+  - Incorporate password hashing (e.g., using bcrypt) to secure login credentials.
+  - Review and enhance overall security measures in the registration and login processes.
+
+- **Collect User Feedback and Plan Updates**:
+  - Gather further feedback from users regarding the new register/login feature.
+  - Use this feedback to plan and implement subsequent updates and improvements.
