@@ -1,10 +1,12 @@
+// app/(tabs)/_layout.tsx
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
+// If you want to remove the default background, comment out the next import:
+// import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -14,32 +16,45 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        // Active/inactive colors
+        tabBarActiveTintColor: '#BB86FC',   // Purple accent
+        tabBarInactiveTintColor: '#AAAAAA', // Gray
         headerShown: false,
+
+        // If you want haptic feedback on tabs, keep HapticTab:
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          web: {
-            display: 'none'
-          },
-          ios: {
-            position: 'absolute',
-            bottom: 0, // Default behavior for iOS
-            backgroundColor: 'black',
-          },
-          default: {
-            position: 'absolute',
-            bottom: 0, // Default for other platforms
-            backgroundColor: 'black',
-          },
-        }),
+
+        // If you have a custom background component, remove or comment it if it conflicts:
+        // tabBarBackground: TabBarBackground,
+
+        // Style the tab bar container
+        tabBarStyle: {
+          position: 'absolute',
+          // On iOS, a 'floating' tab bar typically has some spacing around it
+          bottom: 20,
+          left: 16,
+          right: 16,
+          height: 60,
+          backgroundColor: '#1F1F1F', // Dark background
+          borderRadius: 15,
+          borderTopWidth: 0,
+
+          // Shadows for a floating look
+          elevation: 5, // Android
+          shadowColor: '#000', // iOS
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="lock.fill" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -61,13 +76,6 @@ export default function TabLayout() {
         options={{
           title: 'Group Chat',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="message" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="signup"
-        options={{
-          title: 'Login',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="lock.fill" color={color} />,
         }}
       />
     </Tabs>

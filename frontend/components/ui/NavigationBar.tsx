@@ -23,7 +23,6 @@ export default function NavigationBar() {
         <Link href="/calendar" style={styles.tab}>Calendar</Link>
         <Link href="/advising" style={styles.tab}>Advising</Link>
         <Link href="/groupchat" style={styles.tab}>Group Chat</Link>
-        <Link href="/signup" style={styles.tab}>Login</Link>
       </View>
     </View>
   );

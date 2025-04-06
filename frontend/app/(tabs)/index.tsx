@@ -1,101 +1,129 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+// app/(tabs)/index.tsx
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<null | { username: string; program: string; yearofstudy: string }>(null);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const userStr = await AsyncStorage.getItem('currentUser');
+      if (!userStr) {
+        // Not logged in: Redirect to the login screen
+        router.replace('/loginRoute/login');
+      } else {
+        // Logged in: Save user info and proceed
+        setUser(JSON.parse(userStr));
+        setLoading(false);
+      }
+    };
+
+    checkLogin();
+  }, []);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('currentUser');
+    router.replace('/loginRoute/login');
+  };
+
+  // Helper function to get the correct suffix
+  const getYearSuffix = (year: number): string => {
+    if (year === 1) return "st";
+    if (year === 2) return "nd";
+    if (year === 3) return "rd";
+    return "th";
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
+  }
+
+  // Convert the year string to a number for comparison
+  const yearNumber = user ? parseInt(user.yearofstudy, 10) : 0;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome to STUDENT-HUB App!</Text>
+      <Text style={styles.headerText}>Welcome, {user?.username}!</Text>
+      <Text style={styles.subText}>Degree: {user?.program}</Text>
+      <Text style={styles.subText}>
+        Year of study: {user?.yearofstudy}
+        {getYearSuffix(yearNumber)} year of study
+      </Text>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={() => { /* Reset password function not yet implemented */ }}>
+          <Text style={styles.buttonText}>Reset Password</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
+const DARK_BG = '#121212';
+const ACCENT_COLOR = '#BB86FC'; // A nice purple accent, for example
+const LIGHT_TEXT = '#FFFFFF';
+const GRAY_TEXT = '#BBBBBB';
+
 const styles = StyleSheet.create({
-  container: {
+  loadingContainer: {
     flex: 1,
+    backgroundColor: DARK_BG,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
   },
-  text: {
-    fontSize: 20,
+  container: {
+    flex: 1,
+    backgroundColor: DARK_BG,
+    alignItems: 'center',
+    paddingTop: 80,
+    paddingHorizontal: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    marginBottom: 15,
+    fontWeight: 'bold',
+    color: LIGHT_TEXT,
+    textAlign: 'center',
+  },
+  subText: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: GRAY_TEXT,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    marginTop: 30,
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    width: '70%',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  resetButton: {
+    backgroundColor: ACCENT_COLOR,
+  },
+  logoutButton: {
+    backgroundColor: '#CF6679', // A reddish/pink color, for instance
+  },
+  buttonText: {
+    color: LIGHT_TEXT,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
-
-
-// import { Image, StyleSheet, Platform } from 'react-native';
-
-// import { HelloWave } from '@/components/HelloWave';
-// import ParallaxScrollView from '@/components/ParallaxScrollView';
-// import { ThemedText } from '@/components/ThemedText';
-// import { ThemedView } from '@/components/ThemedView';
-
-// export default function HomeScreen() {
-//   return (
-//     <ParallaxScrollView
-//       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-//       headerImage={
-//         <Image
-//         //source={require('@/assets/images/partial-react-logo.png')}
-//         //style={styles.reactLogo}
-//         />
-//       }>
-//       <ThemedView style={styles.titleContainer}>
-//         <ThemedText type="title">Welcome to fist application</ThemedText>
-//         <HelloWave />
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Where is the pizza!</ThemedText>
-//         <ThemedText>
-//           Pizza is an important food
-//         </ThemedText>
-//         { /*<ThemedText> 
-//           Edit <ThemedText type="default">app/(tabs)/index.tsx</ThemedText> to see changes.
-//           Press{' '}
-//           <ThemedText type="defaultSemiBold">
-//             {Platform.select({
-//               ios: 'cmd + d',
-//               android: 'cmd + m',
-//               web: 'F12'
-//             })}
-//           </ThemedText>{' '}
-//           to open developer tools.
-//         </ThemedText> */}
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-//         <ThemedText>
-//           Tap the Explore tab to learn more about what's included in this starter app.
-//         </ThemedText>
-//       </ThemedView>
-//       <ThemedView style={styles.stepContainer}>
-//         <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-//         <ThemedText>
-//           When you're ready, run{' '}
-//           <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-//           <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-//           <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-//           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-//         </ThemedText>
-//       </ThemedView>
-//     </ParallaxScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   titleContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     gap: 8,
-//   },
-//   stepContainer: {
-//     gap: 8,
-//     marginBottom: 8,
-//   },
-//   reactLogo: {
-//     height: 178,
-//     width: 290,
-//     bottom: 0,
-//     left: 0,
-//     position: 'absolute',
-//   },
-// });

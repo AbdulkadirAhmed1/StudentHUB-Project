@@ -188,51 +188,61 @@ const fetchCourses = async () => {
 
       {/* Plot Calendar Modal */}
       <CalendarModal
-        courses={courses} // ✅ Pass course data
-        visible={calendarVisible} // ✅ Pass modal visibility state
-        onClose={() => setCalendarVisible(false)} // ✅ Handle closing
+        courses={courses} // Pass course data
+        visible={calendarVisible} // Pass modal visibility state
+        onClose={() => setCalendarVisible(false)} // Handle closing
       />
     </View>
   );
 }
 
+const DARK_BG = '#121212';
+const CARD_BG = '#1E1E1E';
+const LIGHT_TEXT = '#FFFFFF';
+const SUBTLE_TEXT = '#BBBBBB';
+const BUTTON_BLUE = '#3A7BD5';
+const BUTTON_PURPLE = '#BB86FC';
+const BORDER_COLOR = '#333';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: DARK_BG,
     paddingTop: 50,
-    alignItems: "center",
+    alignItems: 'center',
   },
   header: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: LIGHT_TEXT,
     marginBottom: 10,
   },
   coursesHeading: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: LIGHT_TEXT,
     marginTop: 20,
     marginBottom: 10,
   },
   noCoursesText: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 16,
-    color: "#666",
-    marginBottom: 20, // Keep spacing consistent
+    color: SUBTLE_TEXT,
+    marginBottom: 20,
   },
   coursesList: {
-    width: "90%",
+    width: '90%',
     maxHeight: 250,
-    marginBottom: 20, // Ensures spacing between list and buttons
+    marginBottom: 20,
   },
   courseItem: {
-    backgroundColor: "#ffffff",
+    backgroundColor: CARD_BG,
     marginVertical: 5,
     padding: 15,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
+    borderColor: BORDER_COLOR,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -240,83 +250,87 @@ const styles = StyleSheet.create({
   },
   courseText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
+    color: LIGHT_TEXT,
   },
   courseSubText: {
     fontSize: 12,
-    color: "#666",
+    color: SUBTLE_TEXT,
+    marginTop: 3,
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-    marginTop: 30, // Fixed margin so buttons stay in the same place
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
+    marginTop: 30,
   },
   addButton: {
-    backgroundColor: "blue",
+    backgroundColor: BUTTON_BLUE,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
   },
   plotButton: {
-    backgroundColor: "green",
+    backgroundColor: BUTTON_PURPLE,
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
   },
   buttonText: {
-    color: "white",
+    color: LIGHT_TEXT,
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: CARD_BG,
     padding: 20,
     borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
+    width: '90%',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: LIGHT_TEXT,
     marginBottom: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#666',
+    backgroundColor: '#2A2A2A',
+    color: LIGHT_TEXT,
     padding: 10,
     marginBottom: 10,
-    width: "100%",
+    width: '100%',
+    borderRadius: 5,
   },
   modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 15, // Added spacing between input fields and buttons
-  },
-  modalButton: {
-    flex: 1,
-    marginHorizontal: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 15,
   },
   buttonWrapper: {
     flex: 1,

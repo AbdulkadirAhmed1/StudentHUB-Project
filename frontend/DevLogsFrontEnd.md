@@ -283,11 +283,46 @@
     - Successful registration and login lead to correct display of user profile information.
     - Logout and Delete Account functionalities work as expected.
 
+--- 
+
+### Log 1.9 4/4/2025
+
+- **UI/UX Major Redesign**:
+  - **Login/Register Screens**:
+    - **Updated Look**: Redesigned with a modern dark gradient background and refined spacing.
+    - **Rounded Elements**: Inputs and buttons now have circular (rounded) edges.
+    - **Icon-enhanced Inputs**: Each input field features a small icon to improve usability.
+    - **Gradient Buttons**: The primary action buttons (Login and Register) now use a yellow gradient (reflecting the logo’s accent color).
+    - **Sign up Button**: Replaced the text link with a transparent, outlined "Sign up" button.
+    - **Screenshots**:
+      - **Login Screen**: [Login Look](https://i.imgur.com/W2nM8NQ.png)
+      - **Register Screen**: [Register Look](https://i.imgur.com/0AKllp2.png)
+
+  - **Profile Page**:
+    - **Home Removed**: The Home page is now replaced with a Profile page, which serves as the default landing page after authentication.
+    - **User Information**: Displays the user’s details (username, year of study, and field of study) in a clean, modern layout.
+    - **Screenshot**: [Profile Look](https://i.imgur.com/nKL9X4m.png)
+
+  - **Calendar Page**:
+    - **Updated Design**: Features a darker, cleaner interface that aligns with the new overall aesthetic.
+    - **Screenshot**: [Calendar Look](https://i.imgur.com/nXIR4te.png)
+
+- **Routing and Functionality**:
+  - **Secure Routing**: Users must log in or register before accessing features like Calendar and Advising.
+  - **Seamless Experience**: Auto-login via AsyncStorage and intuitive navigation ensure a smooth user journey.
+
+- **Design Philosophy**:
+  - **Color Scheme**: The new design is anchored by a dark background with yellow gradient accents (inspired by the logo), white text, and subtle grays.
+  - **Modern Aesthetic**: Rounded inputs, transparent elements, and gradient buttons contribute to a contemporary, user-friendly interface.
+  - **Consistent UI**: Uniform spacing and styling across screens create a cohesive look throughout the app.
+
+*This update marks a significant step forward in refining the user interface and experience for StudentHUB, transitioning to a more modern and streamlined design approach.*
+
 ---
 
 ## Reproduction Steps:
 
-### **Log 1.8  - Reproduction Steps**  
+### **Log 1.9  - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
@@ -303,24 +338,37 @@
      ```
    - Scan the **QR code** with the **Expo Go** app or open the app in the browser.
 
-3. **Login Feature:**  
-- Open the Login page.
-- Enter a valid Username and Password.
-- Tap the "Register" button to navigate to the Registration page.
+3. **Login Screen:**
+   - The login screen now uses a modern design with rounded, circular input fields and icon-enhanced TextInputs.
+   - The "Login" button features a yellow gradient (from gold to light goldenrod yellow) that echoes the logo’s accent.
+   - A "Forgot Password?" link is displayed immediately under the password field.
+   - A transparent "Sign up" button (outlined) is placed right below the Login button with reduced spacing.
+   - **Reproduction:**
+     - Enter valid credentials in the input fields.
+     - Tap "Login" and confirm you are redirected to the Calendar/Profile screen.
+     - Tap "Forgot Password?" and verify the link is responsive (even if the action isn’t implemented yet).
+     - If you tap the "Sign up" button instead, it should switch the view to the Registration screen.
 
-4. **Registration Feature:**  
-- On the Registration page, first leave the fields empty to trigger validation errors.
-- Then fill in valid details, ensuring:
-  - **Username:** More than 6 characters and less than 14 characters.
-  - **Password:** Between 6 and 14 characters.
-  - **Year of Study:** A number between 1 and 20.
-- Tap "Submit Registration" and confirm that you are automatically logged in.
+4. **Registration Screen:**
+   - The Registration screen follows a similar design: gradient buttons, circular inputs with icons, and a clean layout.
+   - Fields include Username, Password, Year of Study, and Program.
+   - **Reproduction:**
+     - First, try leaving fields empty to trigger validation errors.
+     - Then, fill in valid details (e.g., Username: 6–10 characters, Password: 5–15 characters, Year of Study: 1–10, Program: 6–10 characters).
+     - Tap "Register" (using the yellow gradient button) and ensure you are automatically logged in (redirected to Calendar/Profile).
+     - Tap "Cancel" to return to the Login screen if needed.
 
-5. **User Profile Verification:**  
-- Verify that the User Profile page displays the correct details (Username, Year of Study, Field of Study).
-- Test the Logout and Delete Account functionalities to ensure they work as expected.
+5. **Profile/Calendar View:**
+   - Upon successful login or registration, verify that the app routes to the Profile (formerly Home) page.
+   - Confirm that the Profile page shows a dark, modern look consistent with the gradient background and clean typography.
+
+6. **General UI/UX Checks:**
+   - All input fields and buttons should be clearly spaced with the updated margins:
+     - Increased spacing between inputs and between the "Forgot Password?", Login, and Sign up buttons.
+   - The overall color scheme is unified with the dark background and yellow gradient accents (reflecting the logo’s colors).
+   - Ensure that the icons, text, and gradients render correctly across devices.
   
-6. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
+7. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
      ```bash
      npx expo start
      ```
@@ -472,4 +520,24 @@
 
 - **Collect User Feedback and Plan Updates**:
   - Gather further feedback from users regarding the new register/login feature.
-  - Use this feedback to plan and implement subsequent updates and improvements.
+  - Use this feedback to plan and implement subsequent updates and improvements. 
+
+  ### Log 1.9 4/6/2025
+
+- **UI/UX Refinements:**
+  - Conduct cross-platform testing on iOS, Android, and web to ensure the gradient backgrounds, rounded inputs, and buttons render consistently.
+  - Gather user feedback on the new dark theme and modern look to fine-tune the spacing, font sizes, and overall visual hierarchy.
+  - Refine the gradient settings (colors, direction, and intensity) for both the background and the primary action buttons based on feedback.
+
+- **Functionality Enhancements:**
+  - Implement the "Forgot Password?" functionality.
+  - Optimize input validation and error messaging for a smoother user experience.
+
+- **Performance & Compatibility:**
+  - Test the performance of the gradient components (using expo-linear-gradient) and ensure they do not negatively affect app responsiveness.
+  - Review and update any dependencies if needed to maintain compatibility with the latest Expo SDK.
+
+- **Future Features:**
+  - Plan integration of advanced user profile features (such as editing profile information and dynamic theme settings).
+  - Expand the calendar and advising functionalities with richer interactions.
+  - Prepare for further backend integration to support dynamic content updates.

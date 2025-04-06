@@ -76,72 +76,87 @@ export default function CalendarModal({ courses, visible, onClose }: CalendarMod
     );
 }
 
+const DARK_BG = "#121212";
+const CARD_BG = "#1E1E1E";
+const LIGHT_TEXT = "#FFFFFF";
+const SUBTLE_TEXT = "#BBBBBB";
+const BORDER_COLOR = "#333";
+const BUTTON_BLUE = "#3A7BD5";
+
 const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0,0,0,0.5)",
-    },
-    modalContent: {
-        backgroundColor: "white",
-        padding: 20,
-        borderRadius: 10,
-        width: "95%",
-        height: "80%",
-        alignItems: "center",
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    headerRow: {
-        flexDirection: "row",
-        borderBottomWidth: 2,
-        borderBottomColor: "black",
-    },
-    timeHeader: {
-        width: 50,
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-    dayHeader: {
-        flex: 1,
-        textAlign: "center",
-        fontWeight: "bold",
-        paddingHorizontal: 15, // ⬅️ Added padding to space them out
-        fontSize: 16, // ⬆️ Bigger font for readability
-        minWidth: 80, // ⬆️ Forces more space between days
-    },
-    row: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    timeColumn: {
-        width: 80, // ⬆️ Increased from 50 to 80 to take up more space
-        textAlign: "center",
-        fontWeight: "bold",
-        borderRightWidth: 1,
-        borderRightColor: "black",
-    },
-    cell: {
-        flex: 1,
-        height: 60, // ⬆️ Adjust if needed for better spacing
-        minWidth: 100, // ⬆️ Make cells wider to match the extra space
-        borderWidth: 1,
-        borderColor: "#ddd",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    courseText: {
-        fontSize: 12,
-        fontWeight: "bold",
-        color: "white",
-        backgroundColor: "blue",
-        padding: 5, // Increased padding
-        borderRadius: 5,
-        minWidth: 50, // Ensure text is readable
-        textAlign: "center",
-    }
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.7)", // Darker overlay
+  },
+  modalContent: {
+    backgroundColor: CARD_BG,
+    padding: 20,
+    borderRadius: 10,
+    width: "95%",
+    height: "80%",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: LIGHT_TEXT,
+  },
+  headerRow: {
+    flexDirection: "row",
+    borderBottomWidth: 2,
+    borderBottomColor: BORDER_COLOR,
+    marginBottom: 10,
+  },
+  timeHeader: {
+    width: 60,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: LIGHT_TEXT,
+  },
+  dayHeader: {
+    flex: 1,
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingHorizontal: 15,
+    fontSize: 16,
+    minWidth: 80,
+    color: LIGHT_TEXT,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  timeColumn: {
+    width: 80,
+    textAlign: "center",
+    fontWeight: "bold",
+    borderRightWidth: 1,
+    borderRightColor: BORDER_COLOR,
+    color: LIGHT_TEXT,
+  },
+  cell: {
+    flex: 1,
+    height: 60,
+    minWidth: 100,
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  courseText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: LIGHT_TEXT,
+    backgroundColor: BUTTON_BLUE,
+    padding: 5,
+    borderRadius: 5,
+    minWidth: 50,
+    textAlign: "center",
+  },
 });
