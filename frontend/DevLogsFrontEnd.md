@@ -295,17 +295,17 @@
     - **Gradient Buttons**: The primary action buttons (Login and Register) now use a yellow gradient (reflecting the logo’s accent color).
     - **Sign up Button**: Replaced the text link with a transparent, outlined "Sign up" button.
     - **Screenshots**:
-      - **Login Screen**: [Login Look](https://i.imgur.com/W2nM8NQ.png)
-      - **Register Screen**: [Register Look](https://i.imgur.com/0AKllp2.png)
+      - **Login Screen**: ![Login Look](https://i.imgur.com/W2nM8NQ.png)
+      - **Register Screen**: ![Register Look](https://i.imgur.com/0AKllp2.png)
 
   - **Profile Page**:
     - **Home Removed**: The Home page is now replaced with a Profile page, which serves as the default landing page after authentication.
     - **User Information**: Displays the user’s details (username, year of study, and field of study) in a clean, modern layout.
-    - **Screenshot**: [Profile Look](https://i.imgur.com/nKL9X4m.png)
+    - **Screenshot**: ![Profile Look](https://i.imgur.com/nKL9X4m.png)
 
   - **Calendar Page**:
     - **Updated Design**: Features a darker, cleaner interface that aligns with the new overall aesthetic.
-    - **Screenshot**: [Calendar Look](https://i.imgur.com/nXIR4te.png)
+    - **Screenshot**: ![Calendar Look](https://i.imgur.com/nXIR4te.png)
 
 - **Routing and Functionality**:
   - **Secure Routing**: Users must log in or register before accessing features like Calendar and Advising.
