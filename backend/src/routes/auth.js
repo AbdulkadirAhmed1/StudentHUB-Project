@@ -13,6 +13,9 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
 
+    // Default name logic: username could be used as name (or any custom logic you prefer)
+    const name = username;  // If you want to store username as name, otherwise modify this logic
+
     // Check if username already exists
     const existingUser = await pool.query(
       'SELECT * FROM users WHERE username = $1',
@@ -22,12 +25,12 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Username already taken.' });
     }
 
-    // Insert new user
+    // Insert new user with name, year of study, and program
     const result = await pool.query(
-      `INSERT INTO users (username, password, yearofstudy, program)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, username, yearofstudy, program`,
-      [username, password, yearOfStudy, program]
+      `INSERT INTO users (username, password, yearofstudy, program, name)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, username, name, yearofstudy, program`,
+      [username, password, yearOfStudy, program, name]
     );
 
     const newUser = result.rows[0];
@@ -41,19 +44,19 @@ router.post('/register', async (req, res) => {
 
 // DELETE /api/auth/delete
 router.delete('/delete', async (req, res) => {
-    try {
-      const { id } = req.body;  // expecting the user id in the body
-      if (!id) {
-        return res.status(400).json({ error: 'User id is required.' });
-      }
-      // Delete user from the database.
-      await pool.query('DELETE FROM users WHERE id = $1', [id]);
-      res.json({ message: 'User deleted successfully.' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error deleting user.' });
+  try {
+    const { id } = req.body;  // expecting the user id in the body
+    if (!id) {
+      return res.status(400).json({ error: 'User id is required.' });
     }
-  });
+    // Delete user from the database.
+    await pool.query('DELETE FROM users WHERE id = $1', [id]);
+    res.json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error deleting user.' });
+  }
+});
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
@@ -85,6 +88,7 @@ router.post('/login', async (req, res) => {
       user: {
         id: user.id,
         username: user.username,
+        name: user.name,
         yearofstudy: user.yearofstudy,
         program: user.program
       }
