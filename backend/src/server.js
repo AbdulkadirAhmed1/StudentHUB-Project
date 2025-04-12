@@ -2,7 +2,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const coursesRouter = require("./routes/courses");  // <-- Import our new router
 const authRouter = require("./routes/auth");
 
 const app = express();
@@ -22,7 +21,6 @@ app.get("/api/test", (req, res) => {
 });
 
 // Mount the courses router
-app.use("/api/courses", coursesRouter);
 app.use("/api/auth", authRouter);
 
 // Start the server
