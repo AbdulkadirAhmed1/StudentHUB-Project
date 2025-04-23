@@ -2,7 +2,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+
 const authRouter = require("./routes/auth");
+const deparmtentRouter = require("./routes/departments");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +24,7 @@ app.get("/api/test", (req, res) => {
 
 // Mount the courses router
 app.use("/api/auth", authRouter);
+app.use("/api/departments",deparmtentRouter);
 
 // Start the server
 app.listen(PORT, () => {
