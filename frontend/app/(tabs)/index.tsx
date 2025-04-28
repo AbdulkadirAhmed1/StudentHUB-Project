@@ -7,7 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<null | { username: string; program: string; yearofstudy: string }>(null);
+  // Update the type to include department and major
+  const [user, setUser] = useState<null | { username: string; department: string; major: string; yearofstudy: string }>(null);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -52,7 +53,8 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Welcome, {user?.username}!</Text>
-      <Text style={styles.subText}>Degree: {user?.program}</Text>
+      <Text style={styles.subText}>Department: {user?.department}</Text>
+      <Text style={styles.subText}>Major: {user?.major}</Text>
       <Text style={styles.subText}>
         Year of study: {user?.yearofstudy}
         {getYearSuffix(yearNumber)} year of study

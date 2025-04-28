@@ -87,20 +87,66 @@ class Department {
 const EECS = new Department(
     'EECS',
     [
-        new Course(
-            'EECS2030',
-            'Advanced separation of concerns for implementers.',
-            [
-                ['EECS1021', 'EECS1020', 'EECS1022', 'EECS1720'],
-                ['EECS1045'],
-            ],
-            false, // not placeholder
-            1,     // term 1
-            10,    // 10:00 AM
-            30     // 10:30 AM
-        ),
+      new Course(
+        'EECS2030',
+        'Advanced separation of concerns for implementers.',
+        [
+          ['EECS1021', 'EECS1020', 'EECS1022', 'EECS1720'],
+          ['EECS1045'],
+        ],
+        false, // not placeholder
+        1,     // term 1
+        10,    // 10:00 AM
+        30     // 10:30 AM
+      ),
+      new Course(
+        'EECS1010',
+        'Introduction to programming fundamentals.',
+        [],
+        false,
+        1,
+        9,
+        0
+      ),
+      new Course(
+        'EECS1020',
+        'Web development basics.',
+        [],
+        false,
+        1,
+        11,
+        0
+      ),
+      new Course(
+        'EECS1045',
+        'Discrete mathematics.',
+        [],
+        false,
+        1,
+        8,
+        30
+      ),
+      new Course(
+        'EECS1720',
+        'Data structures and algorithms.',
+        [['EECS1010']],
+        false,
+        2,
+        13,
+        0
+      ),
+      new Course(
+        'EECS2021',
+        'Advanced algorithms and complexity.',
+        [['EECS1720']],
+        false,
+        2,
+        14,
+        30
+      ),
     ]
-);
+  );
+  
 
 const departments = [EECS];
 

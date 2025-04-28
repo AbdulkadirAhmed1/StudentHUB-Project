@@ -320,9 +320,48 @@
 
 ---
 
+### Log 1.10 – 4/28/2025
+
+- **Calendar Page Revamp**  
+  - **New Header Layout**: “March 2024” (or current month/year) centered, with circular “<” and “>” navigation buttons.  
+  - **Month Grid**: Days now arranged Monday–Sunday with clean spacing and subtle dividers.  
+  - **Bottom Card**: Immediately under the calendar grid, a rounded-corner card shows the selected date (or “Select a date” placeholder).  
+  - **Screenshot**:  
+    ![Calendar Look](https://i.imgur.com/HgCeium.png)
+
+- **“+Add Course” Modal**  
+  - **Slide-up Overlay**: Tapping “+Add Course” opens a full-screen transparent overlay with a centered card.  
+  - **Department Picker**: Top drop-down lets you choose from fetched department names.  
+  - **Search Bar**: Live-filter text input—only shows courses whose code contains your query.  
+  - **Course List**: Scrollable list of “DEPT1234 – Course Description…” entries; empty-state placeholder when no match.  
+  - **Close Button**: Dismisses the modal.  
+  - **Screenshot**:  
+    ![Add Course Modal](https://i.imgur.com/oVBWWxC.png)
+
+- **Registration Form Enhancements**  
+  - **Undergraduate Only Picker**: Replaced free-text “Year of Study” with a picker limited to 1–4 (with note “Undergraduate only”).  
+  - **Department Picker**: Fetches “EECS” (and future departments) from backend, replacing free-text.  
+  - **Major Field**: Temporary text input defaulting to “N/A” (placeholder until majors list is populated).  
+  - **Validation**: Enforces non-empty, correct numeric range for year and pre-selected department.  
+  - **Screenshot**:  
+    ![Registration Look](https://i.imgur.com/K8WkOmP.png)
+
+- **Data-driven Dropdowns**  
+  - **Fetch on Mount**: `/api/departments` populates the department picker.  
+  - **Dynamic Course List**: `/api/departments/:dept/courses` updates course list when department changes.  
+
+- **Design Notes**  
+  - **Dark Theme**: Consistent `#181818` background, `#1E1E1E` cards, white text, subtle grays.  
+  - **Rounded Corners**: Inputs, cards, modals all use 8–20 px radii for a modern, friendly feel.  
+  - **Minimal Animations**: Slide-up modal and smooth picker transitions for polished UX.  
+
+*This release lays the groundwork for the Advising and Group Chat features by introducing data-driven pickers, modal-based workflows, and a unified dark-mode UI.*  
+
+---
+
 ## Reproduction Steps:
 
-### **Log 1.9  - Reproduction Steps**  
+### **Log 1.10  - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
@@ -331,42 +370,43 @@
      cd mainApp
      ```
 
-2. **Start the Project**:  
-   - Run the following command to start the **Expo development server**:  
-     ```bash
-     npx expo start
-     ```
-   - Scan the **QR code** with the **Expo Go** app or open the app in the browser.
+2. **Login Screen**  
+   - **Design**: Rounded inputs with icons, yellow-gradient “Login” button, “Forgot Password?” link, outlined “Sign up” button.  
+   - **Reproduce**:  
+     1. Launch the app—verify you see the Login screen.  
+     2. Enter valid credentials and tap **Login** → you should be routed to Calendar/Profile.  
+     3. Tap **Forgot Password?** → link highlights (even if unimplemented).  
+     4. Tap **Sign up** → view switches to Registration screen.
 
-3. **Login Screen:**
-   - The login screen now uses a modern design with rounded, circular input fields and icon-enhanced TextInputs.
-   - The "Login" button features a yellow gradient (from gold to light goldenrod yellow) that echoes the logo’s accent.
-   - A "Forgot Password?" link is displayed immediately under the password field.
-   - A transparent "Sign up" button (outlined) is placed right below the Login button with reduced spacing.
-   - **Reproduction:**
-     - Enter valid credentials in the input fields.
-     - Tap "Login" and confirm you are redirected to the Calendar/Profile screen.
-     - Tap "Forgot Password?" and verify the link is responsive (even if the action isn’t implemented yet).
-     - If you tap the "Sign up" button instead, it should switch the view to the Registration screen.
+3. **Registration Screen**  
+   - **Design**: Same rounded, iconified inputs; gradient “Register” button; “Cancel” returns to Login.  
+   - **Fields**: Username (6–10 chars), Password (5–15 chars), Year of Study (picker 1–4), Department (picker: “EECS”), Major (“N/A”).  
+   - **Reproduce**:  
+     1. With fields empty, tap **Register** → validation alerts.  
+     2. Fill in valid data (e.g. Username `User123`, Password `secret12`, Year `2`, Department `EECS`) and tap **Register** → auto-redirect to Calendar/Profile.  
+     3. Tap **Cancel** → returns to Login.
 
-4. **Registration Screen:**
-   - The Registration screen follows a similar design: gradient buttons, circular inputs with icons, and a clean layout.
-   - Fields include Username, Password, Year of Study, and Program.
-   - **Reproduction:**
-     - First, try leaving fields empty to trigger validation errors.
-     - Then, fill in valid details (e.g., Username: 6–10 characters, Password: 5–15 characters, Year of Study: 1–10, Program: 6–10 characters).
-     - Tap "Register" (using the yellow gradient button) and ensure you are automatically logged in (redirected to Calendar/Profile).
-     - Tap "Cancel" to return to the Login screen if needed.
+4. **Calendar & Profile**  
+   - **Profile Landing**: After login/register, confirm the Profile page (dark theme, user info) shows.  
+   - **Calendar View**: Navigate to Calendar tab → verify month header, day grid, and bottom card placeholder.  
+   - **Reproduce**:  
+     1. On Calendar tab, tap any date → bottom card updates to show selected date.  
+     2. Tap the date again → card resets to “Select a date”.
 
-5. **Profile/Calendar View:**
-   - Upon successful login or registration, verify that the app routes to the Profile (formerly Home) page.
-   - Confirm that the Profile page shows a dark, modern look consistent with the gradient background and clean typography.
+5. **“Add Course” Modal**  
+   - **Design**: Slide-up overlay with department picker, search bar, filtered course list, and Close button.  
+   - **Reproduce**:  
+     1. Select a date in the calendar.  
+     2. Tap **+Add Course** → the modal appears.  
+     3. Use the department dropdown to choose “EECS”.  
+     4. Type “2030” in the search bar → only EECS2030 appears.  
+     5. Tap **Close** → modal dismisses.
 
-6. **General UI/UX Checks:**
-   - All input fields and buttons should be clearly spaced with the updated margins:
-     - Increased spacing between inputs and between the "Forgot Password?", Login, and Sign up buttons.
-   - The overall color scheme is unified with the dark background and yellow gradient accents (reflecting the logo’s colors).
-   - Ensure that the icons, text, and gradients render correctly across devices.
+6. **General UI/UX Checks**  
+   - Verify consistent dark background (`#181818`/`#1E1E1E`) and white/gray text.  
+   - Ensure rounded corners on cards, inputs, buttons (8–20 px radius).  
+   - Check spacing/margins around icons, inputs, and buttons for readability.  
+   - Test on multiple devices or simulators to confirm responsive layout.
   
 7. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
      ```bash
@@ -541,3 +581,31 @@
   - Plan integration of advanced user profile features (such as editing profile information and dynamic theme settings).
   - Expand the calendar and advising functionalities with richer interactions.
   - Prepare for further backend integration to support dynamic content updates.
+
+### Log 1.10 4/28/2025
+
+- **UI/UX Refinements:**  
+  - Polish the slide-up “Add Course” modal’s styling: adjust overlay opacity, padding, and rounding for a more cohesive look.  
+  - Center the “Select a date” placeholder text in the bottom card and ensure it stays vertically centered as the card expands.  
+  - Harmonize the department picker and search input appearance: consistent corner radii, placeholder text color, and spacing.  
+  - Add subtle touch-feedback (ripple or opacity change) on pressable elements within modal and calendar cells.
+
+- **Functionality Enhancements:**  
+  - Wire up the course selection callback: when a course is tapped in the modal, add it to the selected date’s event list in the bottom card.  
+  - Persist added courses per date in local state (and later to backend) so they remain visible when reopening the app.  
+  - Implement the “Close” button to reset searchQuery and unmount the modal cleanly.
+
+- **Performance & Compatibility:**  
+  - Audit FlatList performance for large course lists: implement `initialNumToRender`, `windowSize`, and `keyExtractor` optimizations.  
+  - Validate that the modal’s slide animation and transparency layer perform smoothly on low-end Android and iOS devices.  
+  - Update `@react-native-picker/picker` to the latest stable release and confirm no regressions.
+
+- **Backend Integration:**  
+  - Create and deploy the `/api/departments/:deptName/courses` endpoint to production.  
+  - Add a new `/api/calendar/:date/courses` GET/POST route to fetch and save the courses mapped to each date.  
+  - Secure all API routes with middleware to verify user authentication token before allowing data access.
+
+- **Future Features:**  
+  - Build out the Advising tab: display user’s planned courses, show prerequisite checks (using the `preReq` arrays), and allow term filtering.  
+  - Enhance the Profile page with editable fields (department, year, major) and avatar upload.  
+  - Lay groundwork for Group Chat: integrate real-time messaging and channel management once backend schema for messages is finalized.  
