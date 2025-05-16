@@ -15,6 +15,7 @@ The backend is **hosted on Render**. The live API endpoint can be found in the f
   ```http
   GET /api/test
   ```
+
   ### **Backend v2.0**
 - **Persistent Storage Integration:**  
   - Integrated PostgreSQL using the `pg` package for persistent data storage.
@@ -43,3 +44,24 @@ The backend is **hosted on Render**. The live API endpoint can be found in the f
   - Enhance error handling and implement comprehensive unit and integration tests.
   - Extend API endpoints to support additional user stories as the project evolves.
 
+### **Backend v3.0**
+- **In-Memory OOP Data Layer:**  
+  - Defined `Course` and `Department` classes in `src/data/mainData.js`, modeling courses with nested prereq arrays (e.g. `[['EECS1021','EECS1020'], ['EECS1045']]`).  
+  - Implemented a `findNode` registry (using `Map`) to auto-create placeholder `Course` instances when referenced prereqs aren’t yet seeded, and to later “fill in” real data when the full course is defined.  
+  - Seeded the “EECS” department with example courses (`EECS1010`, `EECS2030`, etc.), including descriptions, term/time metadata, and prereqs.
+
+- **Departments & Courses API:**  
+  - Added `src/routes/departments.js` router:  
+    - `GET /api/departments` → returns `{ departments: [ 'EECS', … ] }`.  
+    - `GET /api/departments/:deptName/courses` → looks up `Department` by name and returns its `courses` array as JSON.
+
+- **Server Integration & Refactor:**  
+  - Mounted the departments router in `src/server.js` alongside existing auth and test routes.  
+  - Restructured source into `src/data`, `src/db`, and `src/routes` to separate seeded in-memory data, persistent DB logic, and HTTP endpoints.  
+  - Added console warnings in `findNode` when creating placeholders to aid debugging of missing course codes.
+
+- **Next Steps:**  
+  - Migrate seeded `departments` & `courses` into real database tables with proper foreign keys.  
+  - Secure all `/api/departments/*` routes via authentication middleware.  
+  - Add POST/PUT/DELETE endpoints for departments and courses to allow dynamic updates.  
+  - Write unit and integration tests for the new in-memory data layer and routes.

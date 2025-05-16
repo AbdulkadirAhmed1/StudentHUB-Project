@@ -359,9 +359,70 @@
 
 ---
 
+### Log 1.11 – 5/15/2025
+
+- **Empty Calendar State**  
+  - When the screen first loads, no date is highlighted and the bottom card shows a large “Select a date” placeholder in gray italic text.  
+  - The “+ Add Course” button is visible but adding is disabled until a date is chosen.  
+  - This ensures users understand they must pick a date before scheduling classes.  
+  - ![No Date Selected](https://i.imgur.com/vGvf4FV.png)
+
+- **Empty Date State**  
+  - Tapping any calendar cell updates the card header to the chosen date (e.g. “8 March 2024”).  
+  - If that date has no courses, the card shows a centered “No courses scheduled” message in the same gray italic style.  
+  - The “+ Add Course” button remains active, guiding the next action.  
+  - ![Date Selected, No Courses](https://i.imgur.com/l8oi9im.png)
+
+- **Add Course Interaction**  
+  - Pressing “+ Add Course” slides up a translucent modal overlay.  
+  - The top row includes a department picker (fetched from `/api/departments`) and a live‐filter search bar.  
+  - Typing into the search field filters the course list in real time, matching course codes (case-insensitive).  
+  - Selecting a course closes the modal and schedules it on the current date.  
+  - ![Add Course Button View](https://i.imgur.com/XdaCwQc.png)
+
+- **Single Course Scheduled**  
+  - After scheduling one course (e.g. EECS1010 at 9:00 AM), the bottom card displays a single rounded badge.  
+  - Badge styling: dark gray background (`#2C2C2C`), white text, borderRadius 12px, padding 6px vertical.  
+  - The card remains scrollable but does not scroll for a single item.  
+  - ![One Course Added](https://i.imgur.com/MTE3iwV.png)
+
+- **Multiple Courses Scheduled**  
+  - Scheduling additional courses (e.g. EECS1045 at 10:30 AM, EECS1720 at 2:30 PM) adds more badges in chronological order by time.  
+  - The card’s ScrollView becomes active, allowing vertical scrolling when badges exceed available space.  
+  - Each badge now includes three lines:  
+    1. **Course:** `<code>`  
+    2. **Time:** `<formatted time>` (e.g. 2:30 PM)  
+    3. **Prof:** `<name or N/A>`  
+    4. A **View Pre-Reqs** button opens the prerequisites modal.  
+  - ![Three Courses Added](https://i.imgur.com/jhCvpHR.png)
+
+- **Dot Indicator on Calendar**  
+  - Dates with at least one scheduled course display a small blue dot under the day number (`#00A3FF`, 6×6px circle).  
+  - This gives a quick visual cue for which days have events.  
+  - ![Dot Indicator](https://i.imgur.com/HgCeium.png)
+
+- **Prerequisite Modal**  
+  - Tapping **View Pre-Reqs** opens a separate modal showing nested OR/AND chains as bullet lists.  
+  - Example rendering for EECS2030:  
+    - • EECS1021 OR EECS1020 OR EECS1022 OR EECS1720  
+    - AND • EECS1045  
+  - This helps students verify eligibility before enrolling.  
+  - ![Pre-Req Button](https://i.imgur.com/6D4ePuT.png)
+
+- **Design & Layout Notes**  
+  - **Bottom Card** uses a `flex-start` layout with a header row (`date` centered, button right-aligned via `marginLeft: 'auto'`).  
+  - Card height grows to fit content up to 50% of screen height, then scrolls.  
+  - Badges are centered (`alignItems: 'center'`), fixed at 90% of card width, and stacked with vertical margin.  
+  - Calendar grid removed selection when navigating months to avoid carrying over the same day into new month.  
+  - Consistent dark theme (`#181818` background, `#1E1E1E` cards), white text, subtle gray accents, and rounded corners (8–20px) deliver a modern, accessible UI.
+
+*This release completes the Calendar’s scheduling flow, from empty states through multi-course management and prerequisite inspection.*  
+
+---
+
 ## Reproduction Steps:
 
-### **Log 1.10  - Reproduction Steps**  
+### **Log 1.11  - Reproduction Steps**  
 
 1. **Clone the Repository**:  
    - Clone the project using Git:  
@@ -370,45 +431,54 @@
      cd mainApp
      ```
 
-2. **Login Screen**  
-   - **Design**: Rounded inputs with icons, yellow-gradient “Login” button, “Forgot Password?” link, outlined “Sign up” button.  
-   - **Reproduce**:  
-     1. Launch the app—verify you see the Login screen.  
-     2. Enter valid credentials and tap **Login** → you should be routed to Calendar/Profile.  
-     3. Tap **Forgot Password?** → link highlights (even if unimplemented).  
-     4. Tap **Sign up** → view switches to Registration screen.
+2. **Select a Date with No Courses**  
+   - Tap on any day cell (e.g. 8 March 2024).  
+   - **Expected**: Bottom card header updates to “8 March 2024” and shows “No courses scheduled” placeholder.  
+   - **Screenshot**: ![Date Selected, No Courses](https://i.imgur.com/l8oi9im.png)
 
-3. **Registration Screen**  
-   - **Design**: Same rounded, iconified inputs; gradient “Register” button; “Cancel” returns to Login.  
-   - **Fields**: Username (6–10 chars), Password (5–15 chars), Year of Study (picker 1–4), Department (picker: “EECS”), Major (“N/A”).  
-   - **Reproduce**:  
-     1. With fields empty, tap **Register** → validation alerts.  
-     2. Fill in valid data (e.g. Username `User123`, Password `secret12`, Year `2`, Department `EECS`) and tap **Register** → auto-redirect to Calendar/Profile.  
-     3. Tap **Cancel** → returns to Login.
+3. **Open “Add Course” Modal**  
+   - With a date selected, tap **+ Add Course**.  
+   - **Expected**: A slide-up modal appears with:  
+     - A department picker populated from `/api/departments`  
+     - A live-filter search bar  
+     - A scrollable list of courses  
+     - A **Close** button  
+   - **Screenshot**: ![Add Course Button View](https://i.imgur.com/XdaCwQc.png)
 
-4. **Calendar & Profile**  
-   - **Profile Landing**: After login/register, confirm the Profile page (dark theme, user info) shows.  
-   - **Calendar View**: Navigate to Calendar tab → verify month header, day grid, and bottom card placeholder.  
-   - **Reproduce**:  
-     1. On Calendar tab, tap any date → bottom card updates to show selected date.  
-     2. Tap the date again → card resets to “Select a date”.
+4. **Schedule a Single Course**  
+   - In the modal, choose “EECS” then type “1010” → select **EECS1010**.  
+   - **Expected**: Modal closes, bottom card shows one badge for **EECS1010** at its scheduled time, no scrollbar.  
+   - **Screenshot**: ![One Course Added](https://i.imgur.com/MTE3iwV.png)
 
-5. **“Add Course” Modal**  
-   - **Design**: Slide-up overlay with department picker, search bar, filtered course list, and Close button.  
-   - **Reproduce**:  
-     1. Select a date in the calendar.  
-     2. Tap **+Add Course** → the modal appears.  
-     3. Use the department dropdown to choose “EECS”.  
-     4. Type “2030” in the search bar → only EECS2030 appears.  
-     5. Tap **Close** → modal dismisses.
+5. **Schedule Multiple Courses & Scroll**  
+   - Repeat to add **EECS1045** (10:30 AM) and **EECS1720** (2:30 PM).  
+   - **Expected**: Badges appear in chronological order, card becomes scrollable if they exceed available height.  
+   - **Screenshot**: ![Three Courses Added](https://i.imgur.com/jhCvpHR.png)
 
-6. **General UI/UX Checks**  
-   - Verify consistent dark background (`#181818`/`#1E1E1E`) and white/gray text.  
-   - Ensure rounded corners on cards, inputs, buttons (8–20 px radius).  
-   - Check spacing/margins around icons, inputs, and buttons for readability.  
-   - Test on multiple devices or simulators to confirm responsive layout.
-  
-7. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
+6. **Dot Indicator on Calendar**  
+   - Return to the calendar grid.  
+   - **Expected**: The date you scheduled courses on (e.g. 8 March) shows a small blue dot beneath the day number.  
+   - **Screenshot**: ![Dot Indicator](https://i.imgur.com/HgCeium.png)
+
+7. **View Prerequisites**  
+   - In the bottom card, tap **View Pre-Reqs** on one of the badges.  
+   - **Expected**: A modal lists each prereq group, with “OR” chains on one line and additional groups below.  
+   - **Screenshot**: ![Pre-Req Button](https://i.imgur.com/6D4ePuT.png)
+
+8. **Month Navigation Resets Selection**  
+   - While a date is selected, tap “>” to go to the next month.  
+   - **Expected**: Selected date is cleared (no day highlighted) but the dot indicators remain on their original dates.  
+
+9. **Empty-State Return**  
+   - Navigate back to the month with scheduled courses and tap that day again.  
+   - **Expected**: Badges reappear for that date, confirming in-memory persistence.  
+
+10. **Initial Empty State**  
+   - Launch the app and navigate to the Calendar tab.  
+   - **Expected**: No date is selected, bottom card shows “Select a date” in gray italic text.  
+   - **Screenshot**: ![No Date Selected](https://i.imgur.com/vGvf4FV.png)
+
+11. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
      ```bash
      npx expo start
      ```
@@ -609,3 +679,28 @@
   - Build out the Advising tab: display user’s planned courses, show prerequisite checks (using the `preReq` arrays), and allow term filtering.  
   - Enhance the Profile page with editable fields (department, year, major) and avatar upload.  
   - Lay groundwork for Group Chat: integrate real-time messaging and channel management once backend schema for messages is finalized.  
+
+### Log 1.11 5/15/2025
+
+- **UI/UX Tweaks**  
+  - Center the “No courses scheduled” text vertically when a date is selected but empty.  
+  - Refine badge styling: increase minimum height (e.g. `minHeight: 40`) and consistent vertical spacing.  
+  - Adjust bottom card max height to 50% of screen, then enable scrolling—ensure scroll-thumb is hidden on Android.  
+  - Add subtle press feedback (opacity change) on badges and calendar cells.
+
+- **Data & Sorting**  
+  - Sort scheduled courses by their `hour`/`minute` before rendering badges to guarantee chronological order.  
+  - On month change, reset `selectedDate` state to `null` to avoid phantom selection carry-over.
+
+- **Performance Optimizations**  
+  - Replace ScrollView for badges with FlatList when items > 5 for better virtualization.  
+  - Memoize `getCalendarMatrix` and badge list rendering with `React.memo` or `useMemo` to reduce re-renders.
+
+- **Backend & Persistence**  
+  - Implement `/api/calendar/:date/courses` GET/POST endpoints to load and save a user’s calendar events.  
+  - Integrate AsyncStorage fallback for offline mode—sync to backend when connectivity is restored.
+
+- **Future Features**  
+  - Add push notifications for upcoming scheduled courses (e.g. 15 minutes prior).  
+  - Build the Advising tab to surface conflicts, prerequisite checks, and exportable schedule.  
+  - Kick off Group Chat integration with real-time course discussion channels.

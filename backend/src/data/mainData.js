@@ -100,7 +100,7 @@ const EECS = new Department(
         30     // 10:30 AM
       ),
       new Course(
-        'EECS1010',
+        'EECS1010', 
         'Introduction to programming fundamentals.',
         [],
         false,
