@@ -398,8 +398,6 @@
 
 - **Dot Indicator on Calendar**  
   - Dates with at least one scheduled course display a small blue dot under the day number (`#00A3FF`, 6×6px circle).  
-  - This gives a quick visual cue for which days have events.  
-  - ![Dot Indicator](https://i.imgur.com/HgCeium.png)
 
 - **Prerequisite Modal**  
   - Tapping **View Pre-Reqs** opens a separate modal showing nested OR/AND chains as bullet lists.  
@@ -434,7 +432,6 @@
 2. **Select a Date with No Courses**  
    - Tap on any day cell (e.g. 8 March 2024).  
    - **Expected**: Bottom card header updates to “8 March 2024” and shows “No courses scheduled” placeholder.  
-   - **Screenshot**: ![Date Selected, No Courses](https://i.imgur.com/l8oi9im.png)
 
 3. **Open “Add Course” Modal**  
    - With a date selected, tap **+ Add Course**.  
@@ -443,27 +440,22 @@
      - A live-filter search bar  
      - A scrollable list of courses  
      - A **Close** button  
-   - **Screenshot**: ![Add Course Button View](https://i.imgur.com/XdaCwQc.png)
 
 4. **Schedule a Single Course**  
    - In the modal, choose “EECS” then type “1010” → select **EECS1010**.  
    - **Expected**: Modal closes, bottom card shows one badge for **EECS1010** at its scheduled time, no scrollbar.  
-   - **Screenshot**: ![One Course Added](https://i.imgur.com/MTE3iwV.png)
 
 5. **Schedule Multiple Courses & Scroll**  
    - Repeat to add **EECS1045** (10:30 AM) and **EECS1720** (2:30 PM).  
    - **Expected**: Badges appear in chronological order, card becomes scrollable if they exceed available height.  
-   - **Screenshot**: ![Three Courses Added](https://i.imgur.com/jhCvpHR.png)
 
 6. **Dot Indicator on Calendar**  
    - Return to the calendar grid.  
    - **Expected**: The date you scheduled courses on (e.g. 8 March) shows a small blue dot beneath the day number.  
-   - **Screenshot**: ![Dot Indicator](https://i.imgur.com/HgCeium.png)
 
 7. **View Prerequisites**  
    - In the bottom card, tap **View Pre-Reqs** on one of the badges.  
    - **Expected**: A modal lists each prereq group, with “OR” chains on one line and additional groups below.  
-   - **Screenshot**: ![Pre-Req Button](https://i.imgur.com/6D4ePuT.png)
 
 8. **Month Navigation Resets Selection**  
    - While a date is selected, tap “>” to go to the next month.  
@@ -476,7 +468,6 @@
 10. **Initial Empty State**  
    - Launch the app and navigate to the Calendar tab.  
    - **Expected**: No date is selected, bottom card shows “Select a date” in gray italic text.  
-   - **Screenshot**: ![No Date Selected](https://i.imgur.com/vGvf4FV.png)
 
 11. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
      ```bash
