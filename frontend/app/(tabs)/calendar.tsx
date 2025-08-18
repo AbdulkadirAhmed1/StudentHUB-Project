@@ -100,7 +100,9 @@ export default function CalendarScreen() {
             ? `${selectedDate.getDate()} ${month} ${year}`
             : 'Select a date'
         }
-        courses={scheduledCourses[dateKey] ?? []}
+        courses={[...(scheduledCourses[dateKey] ?? [])].sort(
+          (a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute)
+        )}
         onAddPress={() => setShowModal(true)}
         onViewPrereqs={(pr) => {
           setCurrentPreReq(pr)
@@ -113,10 +115,26 @@ export default function CalendarScreen() {
         onClose={() => setShowModal(false)}
         onSelect={course => {
           if (!selectedDate) return
+
+          const today = scheduledCourses[dateKey] || []
+
+          // Check if exact course already exists
+          const isDuplicate = today.some(c => c.programCode === course.programCode)
+          if (isDuplicate) {
+            alert("Course in given time has already been added")
+            return
+          }
+
+          // Check if any other course shares same time
+          const isConflict = today.some(c => c.hour === course.hour && c.minute === course.minute)
+          if (isConflict) {
+            alert(`Time conflict detected: Another course is already scheduled at ${formatTime(course.hour, course.minute)}.`)
+            return
+          }
+
           setScheduledCourses(prev => {
-            const today = prev[dateKey] || []
-            if (today.some(c => c.programCode === course.programCode)) return prev
-            return { ...prev, [dateKey]: [...today, course] }
+            const updated = [...(prev[dateKey] || []), course]
+            return { ...prev, [dateKey]: updated }
           })
         }}
       />
