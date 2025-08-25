@@ -24,4 +24,15 @@
 
 # Backend-specific ignores
 /backend/.env
-# If backend has any build folders or log files, add them here.
+
+# Native Android build (do not track generated gradle/build files)
+android/
+*.iml
+.gradle/
+.idea/
+local.properties
+
+# (Optional future iOS ignores)
+ios/
+Pods/
+xcuserdata/
