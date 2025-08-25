@@ -56,6 +56,12 @@ export default function TabLayout() {
             <IconSymbol size={28} name="lock.fill" color={color} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault(); // stop default tab behavior
+            navigation.navigate('profileRoute/profile'); // open new profile route
+          },
+        })}
       />
       <Tabs.Screen
         name="calendar"

@@ -32,10 +32,10 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       {Platform.OS === 'web' && <NavigationBar />}
-      <Stack initialRouteName="loginRoute/login"> 
+      <Stack initialRouteName="loginRoute/login">
         {/* 
           ^^^ This ensures that when the app starts, 
-          it loads the `app/login.tsx` screen first 
+          it loads the `app/loginRoute/login.tsx` screen first 
         */}
         <Stack.Screen
           name="loginRoute/login"
@@ -44,6 +44,11 @@ export default function RootLayout() {
         <Stack.Screen
           name="(tabs)"
           options={{ headerShown: false }}
+        />
+        {/* New Profile Route */}
+        <Stack.Screen
+          name="profileRoute/profile"
+          options={{ headerShown: false, presentation: 'card' }}
         />
         <Stack.Screen
           name="+not-found"

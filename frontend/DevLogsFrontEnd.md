@@ -416,282 +416,94 @@
 
 *This release completes the Calendar’s scheduling flow, from empty states through multi-course management and prerequisite inspection.*  
 
+### Log 1.12 – 8/25/2025
+
+This entry represents several weeks of progress across the frontend. Since the previous log (1.11), we have moved from feature prototyping into a phase of **refinement, modularization, and design polish**. This is the longest entry so far because it consolidates multiple iterations: the deep restructuring of the Calendar feature, persistent data storage per user, and the complete design and implementation of the Profile page. It’s equivalent to multiple dev logs merged into one.
+
 ---
 
-## Reproduction Steps:
+- **Calendar Modularization & Enhancements (Post-Log 1.11)**
+  - After scheduling, prerequisite checking, and duplicate detection were introduced in **Log 1.11**, it became clear that `calendar.tsx` was doing far too much. All logic — header, date grid, modals, course rendering, prereq handling — lived in one file. This made iteration slow and error-prone.
+  - We decided to **modularize**. Every responsibility was broken into its own dedicated component. This was one of the most important structural changes in the frontend to date.
+  - **Component Breakdown**
+    - `CalendarHeader.tsx` → Displays the current month and year with left/right arrows. Now it only worries about navigation (prev/next month). Nothing else.
+    - `CalendarGrid.tsx` → Responsible for laying out weeks and days. It knows about selection states, out-of-month cells, and whether a date should have an “event dot”. It doesn’t touch modals or course logic.
+    - `ScheduledCoursesCard.tsx` → Shows the list of courses for the currently selected day. Independent scrolling, empty state messaging, “+ Add Course” button. Clean separation of the presentation layer.
+    - `AddCourseModal.tsx` → Handles course fetching and filtering. It talks to the backend for departments and courses, applies search filters, and lets the user pick. Then it returns the selected course upward. Isolated, so it could be reused in Advising or Group Chat in the future.
+    - `PrereqModal.tsx` → Dedicated UI for prerequisites. Formats AND/OR prereqs into human-readable bullet points. Clean and simple.
+  - **Why Modularization Matters**
+    - Before: `calendar.tsx` was 500+ lines of mixed logic.  
+      After: a set of smaller, testable, swappable components.
+    - Each component is single-purpose, making testing, debugging, and future enhancements much easier.
+    - Clear separation of concerns means design changes (like styling the header differently) no longer risk breaking scheduling logic.
+    - Scalability is now built-in: future features like exporting schedules, reminders, or switching to weekly view will be additions, not rewrites.
+  - **UX & Feature Refinements**
+    - Improved sorting: Courses are automatically ordered by time.
+    - Duplicate prevention: Users cannot add the same course twice.
+    - Time conflict detection: Friendly alerts prevent double-booking.
+    - Per-user persistence: Courses are stored under `calendar_<username>` in AsyncStorage. Logging in as another student loads a completely separate schedule.
+    - Visual polish: Event dots beneath day numbers give students quick awareness of busy days.
+  - **Design & Philosophy**
+    - The calendar now feels like an actual “student planner,” not just a prototype. Its dark theme matches the rest of the app, with layered grays for depth.
+    - Empty states guide the user: instead of showing nothing, the card explains that courses will appear once added.
+    - Every step is student-centered: feedback is immediate, data is consistent, and UI flows naturally.
 
-### **Log 1.11  - Reproduction Steps**  
-
-1. **Clone the Repository**:  
-   - Clone the project using Git:  
-     ```bash
-     git clone https://github.com/AbdulkadirAhmed1/StudentHUB-Project.git
-     cd mainApp
-     ```
-
-2. **Select a Date with No Courses**  
-   - Tap on any day cell (e.g. 8 March 2024).  
-   - **Expected**: Bottom card header updates to “8 March 2024” and shows “No courses scheduled” placeholder.  
-
-3. **Open “Add Course” Modal**  
-   - With a date selected, tap **+ Add Course**.  
-   - **Expected**: A slide-up modal appears with:  
-     - A department picker populated from `/api/departments`  
-     - A live-filter search bar  
-     - A scrollable list of courses  
-     - A **Close** button  
-
-4. **Schedule a Single Course**  
-   - In the modal, choose “EECS” then type “1010” → select **EECS1010**.  
-   - **Expected**: Modal closes, bottom card shows one badge for **EECS1010** at its scheduled time, no scrollbar.  
-
-5. **Schedule Multiple Courses & Scroll**  
-   - Repeat to add **EECS1045** (10:30 AM) and **EECS1720** (2:30 PM).  
-   - **Expected**: Badges appear in chronological order, card becomes scrollable if they exceed available height.  
-
-6. **Dot Indicator on Calendar**  
-   - Return to the calendar grid.  
-   - **Expected**: The date you scheduled courses on (e.g. 8 March) shows a small blue dot beneath the day number.  
-
-7. **View Prerequisites**  
-   - In the bottom card, tap **View Pre-Reqs** on one of the badges.  
-   - **Expected**: A modal lists each prereq group, with “OR” chains on one line and additional groups below.  
-
-8. **Month Navigation Resets Selection**  
-   - While a date is selected, tap “>” to go to the next month.  
-   - **Expected**: Selected date is cleared (no day highlighted) but the dot indicators remain on their original dates.  
-
-9. **Empty-State Return**  
-   - Navigate back to the month with scheduled courses and tap that day again.  
-   - **Expected**: Badges reappear for that date, confirming in-memory persistence.  
-
-10. **Initial Empty State**  
-   - Launch the app and navigate to the Calendar tab.  
-   - **Expected**: No date is selected, bottom card shows “Select a date” in gray italic text.  
-
-11. **Run Jest Unit Tests** (Ensure test cases pass in components>tests):  
-     ```bash
-     npx expo start
-     ```
 ---
 
-## Next Steps:
+- **Profile Page Implementation & Enhancements**
+  - The Profile Page was created from scratch to give StudentHub users a sense of identity within the app. Instead of dumping user data inside the tabs (previously just `index.tsx`), we built a **dedicated route** and **modular components**.
+  - **Component Breakdown**
+    - `ProfileHeader.tsx` → A custom header where the focus is on the “Profile” title. The back arrow and settings icon are intentionally smaller and lighter gray to reduce visual dominance. Both are animated with Reanimated spring effects, providing tactile bounce feedback.
+    - `ProfileAvatar.tsx` → A circular avatar with a default person icon and a pencil overlay for editing. Pressing it triggers a spring bounce animation, making it feel like a real interactive control. The yellow accent ties into the app’s branding.
+    - `ProfileInfo.tsx` → Loads actual student data from AsyncStorage (`username`, `department`, `major`, `year of study`). Redirects to login if missing. Typography hierarchy: big bold username, small gray details. Matches modern mobile UI standards.
+  - **Styling Enhancements**
+    - Background: gradient from `#2C2C2C` to `#000000`, matching the login screen for visual consistency.
+    - Spacing: rebalanced so that header, avatar, and info feel aligned and centered, not cramped or pushed down.
+    - Typography: cleaner fonts, bigger profile title, lighter details. A clear visual hierarchy where the most important data pops first.
+  - **Animations**
+    - Avatar bounce → immediate feedback when touched.
+    - Back arrow and settings → smaller but consistent bounce animation.
+    - Planned: fade-in or slide animations for the profile title itself.
+  - **Impact**
+    - The profile page now feels like a real app feature, not an afterthought. It demonstrates how modularization plus animation plus styling can elevate a screen from basic to polished.
+    - Sets the groundwork for next steps: Edit Profile, Reset Password, Logout, and Settings, all of which will plug into the modular system easily.
 
-### Log 1.1 1/31/2025
+---
 
-- **To Test**: 
-   - Open the app on Expo Go or in a browser.
-   - Confirm both tabs (Home and Calendar) load correctly.
-   - Verify that the text matches the updates mentioned above.
+- **Previous Commits**
+  - **Aug 19, 2025**: `feat(calendar): save and load courses with AsyncStorage, linked to logged-in user`  
+    - A crucial step in persistence. Each user now has a personal calendar state. This required restructuring AsyncStorage keys and ensuring the calendar loads correctly on mount. Without this, the calendar would be generic across all logins.
+    - This commit bridged authentication with scheduling, creating a truly personalized planner.
+  - **Aug 18, 2025**: `Added courses ordered by date and duplicate validation`  
+    - Critical for UX. Before this, courses could appear unordered, or worse, duplicated. Students might have thought the app was buggy or unreliable.
+    - By enforcing order and preventing duplicates, the calendar became reliable. Students trust that what they see is accurate.
+    - Marked the shift from prototype features to production-quality constraints.
 
-### Log 1.2 2/3/2025
+---
 
-- **To Test**:
-   - Open the app on Expo Go or in a browser.
-   - Confirm all tabs (Home, Calendar, Advising, and Group Chat) load correctly.
-   - Verify that the text matches the updates mentioned above.
-   - Ensure the buttons for **Advising** and **Group Chat** work and display the correct pages.
+- **Overall Progress**
+  - **Cohesive Flow**: Students now experience a connected journey: Login → Calendar → Profile. Each screen uses gradients, dark mode, yellow accents, and interactive feedback.
+  - **Consistency Across Modules**
+    - Calendar: modular, persistent, and student-focused.
+    - Profile: modular, animated, and identity-focused.
+    - Login: already gradient-based, now visually matched by Profile.
+  - **Scalability**
+    - Calendar: ready for filters, exports, reminders, multi-view layouts.
+    - Profile: ready for editing, settings, logout, even profile pictures in the future.
+  - **Design Language**
+    - Unified dark aesthetic with layered contrasts.
+    - Yellow as the accent color (edit icons, highlights).
+    - Animation as a standard: every important control responds.
+  - **Philosophy**
+    - Build modularly, so nothing is stuck as “just one big file.”
+    - Build with the student in mind: clarity, feedback, persistence.
+    - Build for tomorrow: these components are not one-offs; they are designed to evolve.
 
-### Log 1.3 2/3/2025
+- **Planned Work**
+  - Upcoming improvements will focus on **dynamic animations** across the app to make navigation feel smoother and more immersive.  
+  - The bottom navigation bar is planned to get animated feedback when switching tabs, reinforcing interactivity.  
+  - The calendar will also receive animated transitions between months and days, helping students visually track changes instead of abrupt jumps.
 
-- **Styling Enhancements**:
-  - Ensure consistency in styles across both mobile and web platforms.
-  - Add icons for all tabs on mobile for better UX.
+---
 
-- **To Test**:
-   - Open the app on Expo Go or in a browser.
-   - Confirm all tabs (Home, Calendar, Advising, Group Chat and Login) load correctly.
-   - Verify that the text matches the updates mentioned above.
-   - Ensure the button for **Login** work and display the correct pages.
-
-- **Testing**:
-  - Verify navigation works seamlessly on all platforms.
-  - Conduct UI tests for both web and mobile platforms.
-
-### Log 1.3.1 2/7/2025
-
-- **Styling Enhancements**:
-  - Ensure consistency in styles across both mobile and web platforms.
-  - Improve the visual design of the navigation bar for a cleaner and more professional look.
-  - Verify that icons and text are correctly aligned across devices.
-
-- **Testing**:
-  - Verify navigation works seamlessly on all platforms.
-  - Conduct UI tests for both web and mobile platforms.
-  - Ensure that tab icons render correctly across different devices.
-
-- **APK Distribution**:
-  - Test the `.apk` on various Android devices to confirm stability.
-  - Optimize the APK size for better performance.
-  - Plan for future deployments and app store submission.
-
-### Log 1.4 2/8/2025
-
-- **Backend Integration**:
-  - Begin setting up the backend for the calendar feature using **Node.js** and **Express.js**.
-  - Host the backend on **Render** and connect it to the frontend.git
-
-- **Database Setup**:
-  - Collaboratively design and implement the **PostgreSQL/MongoDB** database schema with the team.
-  - Ensure seamless integration of backend APIs with the database and frontend.
-
-- **Testing**:
-  - Verify the "Add Course" button functionality after backend integration.
-  - Conduct UI and functionality tests for the updated calendar tab.
-  - Ensure cross-platform compatibility and performance.
-
-- **Future Releases**:
-  - Plan for the next pre-release with backend and database functionalities integrated.
-  - Finalize and optimize features for production readiness.
-
-### Log 1.5 2/12/2025
-
-- **To Test**:  
-  - Open the app on **Expo Go** or in a web browser.  
-  - Navigate to the **Advising tab** and confirm the new advising prompts appear.  
-  - Select each prompt and verify that they return the expected response.  
-  - Ensure that UI elements display correctly across different screen sizes and devices.  
-
-- **Styling & UX Enhancements**:  
-  - Further refine the advising layout for better readability.  
-  - Improve button styling and alignment for a **seamless user experience**.  
-
-- **Testing**:  
-  - Verify navigation between prompts works **without errors**.  
-  - Ensure all advising prompts function as expected.  
-  - Conduct UI tests to **verify mobile and tablet responsiveness**.  
-
-- **Database Integration**:  
-  - Begin integrating **PostgreSQL/MongoDB** for managing advising data.  
-  - Store student queries and responses for **better advising insights**.  
-  - Enable adding courses dynamically in the **Calendar tab**.  
-  - Allow students to **book advising sessions** directly from the app.  
-
-- **Future Features**:  
-  - Expand advising prompts to include **more academic-related queries**.  
-  - Implement **dynamic response handling** for advising questions.  
-  - Introduce **personalized advising recommendations** based on user input.  
-  - Ensure seamless backend integration with frontend for **real-time course updates**.  
-
-### Log 1.6 2/12/2025
-
-- **User Authentication Implementation**:  
-  - Begin setting up **user authentication** for login functionality.  
-  - Secure login credentials using **backend authentication & database storage**.  
-
-- **Database Expansion (PostgreSQL)**:  
-  - Store **user credentials** for secure login.  
-  - Expand the **chatbot database** to allow a wider range of advising responses.  
-
-- **Testing & Enhancements**:  
-  - Conduct **UI tests** for the login page.  
-  - Ensure **seamless integration** of chatbot updates across all devices.  
-  - Verify that new advising chatbot responses work as expected. 
-
-### Log 1.7 3/7/2025
-
-- **Backend API Development (Node.js & Express)**:
-  - Ensure seamless **backend integration** with the **frontend UI**.
-
-- **Optimize Calendar Layout**:
-  - Adjust time range from **0:00-24:00** to **7:00-24:00**.
-  - Improve spacing and readability for better usability.
-
-- **Enhance Course Input Validations**:
-  - Add **professor names & room numbers** (Optional fields currently, but UI will show them).
-  - Implement **better error handling messages** for user clarity.
-
-  ### Log 1.8 4/3/2025
-
-- **Refine User Profile UI**:
-  - Enhance clarity and usability with a redesigned layout.
-  - Ensure that user details (Username, Year of Study, Field of Study) are displayed in a clear and accessible manner.
-
-- **Implement Scrollable UI for Year Selection**:
-  - Develop a scrollable picker component for selecting the Year of Study (for undergraduates).
-  - Prevent invalid inputs by limiting selectable options appropriately.
-
-- **Enhance Error Messaging and Validation**:
-  - Improve error messages to provide detailed and user-friendly feedback.
-  - Refine input validation logic based on user testing to ensure consistency and clarity.
-
-- **Integrate Additional Security Improvements**:
-  - Incorporate password hashing (e.g., using bcrypt) to secure login credentials.
-  - Review and enhance overall security measures in the registration and login processes.
-
-- **Collect User Feedback and Plan Updates**:
-  - Gather further feedback from users regarding the new register/login feature.
-  - Use this feedback to plan and implement subsequent updates and improvements. 
-
-  ### Log 1.9 4/6/2025
-
-- **UI/UX Refinements:**
-  - Conduct cross-platform testing on iOS, Android, and web to ensure the gradient backgrounds, rounded inputs, and buttons render consistently.
-  - Gather user feedback on the new dark theme and modern look to fine-tune the spacing, font sizes, and overall visual hierarchy.
-  - Refine the gradient settings (colors, direction, and intensity) for both the background and the primary action buttons based on feedback.
-
-- **Functionality Enhancements:**
-  - Implement the "Forgot Password?" functionality.
-  - Optimize input validation and error messaging for a smoother user experience.
-
-- **Performance & Compatibility:**
-  - Test the performance of the gradient components (using expo-linear-gradient) and ensure they do not negatively affect app responsiveness.
-  - Review and update any dependencies if needed to maintain compatibility with the latest Expo SDK.
-
-- **Future Features:**
-  - Plan integration of advanced user profile features (such as editing profile information and dynamic theme settings).
-  - Expand the calendar and advising functionalities with richer interactions.
-  - Prepare for further backend integration to support dynamic content updates.
-
-### Log 1.10 4/28/2025
-
-- **UI/UX Refinements:**  
-  - Polish the slide-up “Add Course” modal’s styling: adjust overlay opacity, padding, and rounding for a more cohesive look.  
-  - Center the “Select a date” placeholder text in the bottom card and ensure it stays vertically centered as the card expands.  
-  - Harmonize the department picker and search input appearance: consistent corner radii, placeholder text color, and spacing.  
-  - Add subtle touch-feedback (ripple or opacity change) on pressable elements within modal and calendar cells.
-
-- **Functionality Enhancements:**  
-  - Wire up the course selection callback: when a course is tapped in the modal, add it to the selected date’s event list in the bottom card.  
-  - Persist added courses per date in local state (and later to backend) so they remain visible when reopening the app.  
-  - Implement the “Close” button to reset searchQuery and unmount the modal cleanly.
-
-- **Performance & Compatibility:**  
-  - Audit FlatList performance for large course lists: implement `initialNumToRender`, `windowSize`, and `keyExtractor` optimizations.  
-  - Validate that the modal’s slide animation and transparency layer perform smoothly on low-end Android and iOS devices.  
-  - Update `@react-native-picker/picker` to the latest stable release and confirm no regressions.
-
-- **Backend Integration:**  
-  - Create and deploy the `/api/departments/:deptName/courses` endpoint to production.  
-  - Add a new `/api/calendar/:date/courses` GET/POST route to fetch and save the courses mapped to each date.  
-  - Secure all API routes with middleware to verify user authentication token before allowing data access.
-
-- **Future Features:**  
-  - Build out the Advising tab: display user’s planned courses, show prerequisite checks (using the `preReq` arrays), and allow term filtering.  
-  - Enhance the Profile page with editable fields (department, year, major) and avatar upload.  
-  - Lay groundwork for Group Chat: integrate real-time messaging and channel management once backend schema for messages is finalized.  
-
-### Log 1.11 5/15/2025
-
-- **UI/UX Tweaks**  
-  - Center the “No courses scheduled” text vertically when a date is selected but empty.  
-  - Refine badge styling: increase minimum height (e.g. `minHeight: 40`) and consistent vertical spacing.  
-  - Adjust bottom card max height to 50% of screen, then enable scrolling—ensure scroll-thumb is hidden on Android.  
-  - Add subtle press feedback (opacity change) on badges and calendar cells.
-
-- **Data & Sorting**  
-  - Sort scheduled courses by their `hour`/`minute` before rendering badges to guarantee chronological order.  
-  - On month change, reset `selectedDate` state to `null` to avoid phantom selection carry-over.
-
-- **Performance Optimizations**  
-  - Replace ScrollView for badges with FlatList when items > 5 for better virtualization.  
-  - Memoize `getCalendarMatrix` and badge list rendering with `React.memo` or `useMemo` to reduce re-renders.
-
-- **Backend & Persistence**  
-  - Implement `/api/calendar/:date/courses` GET/POST endpoints to load and save a user’s calendar events.  
-  - Integrate AsyncStorage fallback for offline mode—sync to backend when connectivity is restored.
-
-- **Future Features**  
-  - Add push notifications for upcoming scheduled courses (e.g. 15 minutes prior).  
-  - Build the Advising tab to surface conflicts, prerequisite checks, and exportable schedule.  
-  - Kick off Group Chat integration with real-time course discussion channels.
+*This log consolidates several weeks of work since Log 1.11. It documents the transformation of the Calendar into a modular, persistent, and user-friendly planner, alongside the creation of a polished, animated Profile Page. Together, these changes push StudentHub closer to a production-ready app. This entry is intentionally long — three logs’ worth of updates — to reflect the depth and breadth of the progress made during this period.*
