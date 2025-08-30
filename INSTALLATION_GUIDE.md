@@ -13,7 +13,7 @@ The **installation process is straightforward**, but **understanding how the pro
 - At a **high level**, getting the app up and running is simple—just follow the setup instructions.  
 - At a **low level**, this project follows a **long-term roadmap**, structured into **generations**, each improving the app step by step.  
 
-This journey started as a small idea and grew into a **structured, multi-generation vision**. If you're curious about how far it's come, check out **[BRAINSTORMING.txt](StudentHUB-Project/BRAINSTORMING.txt)**—it's a cool reminder of how ideas evolve over time.  
+This journey started as a small idea and grew into a **structured, multi-generation vision**. If you're curious about how far it's come, check out **[BRAINSTORMING.txt](BRAINSTORMING.txt)**—it's a cool reminder of how ideas evolve over time.  
 
 📌 **How It Started vs. How It's Going**  
 - **BRAINSTORMING.txt** is where the first thoughts were put together—back then, the **platform (website vs. mobile app) was undecided**, and the **database-backend connection was uncertain**.  
@@ -27,11 +27,9 @@ Additionally, an **APK file** is released for every version, allowing **manual i
 ---
 
 ## **🔵 BASIC VIEW vs. 🔴 GOING DEEPER**  
-That’s enough of me talking… **now you choose your path.**  
+🔵 **BASIC VIEW** – just follow the simple steps and run the app.  
 
-🔵 **Take the blue pill** – just follow the simple steps and run the app.  
-
-🔴 **Take the red pill** – dive deeper into the vision, see where this project is going, and explore the structured development plan.  
+🔴 **GOING DEEPER** – dive deeper into the vision, see where this project is going, and explore the structured development plan.  
 
 The choice is yours.  
 
@@ -55,7 +53,6 @@ The **StudentHUB frontend** is built with **React Native & Expo**, ensuring cros
 ---
 
 # **🔴 GOING DEEPER: Want to See the Future?**  
-(*You take the red pill, you stay in Wonderland, and I show you how deep the rabbit hole goes...*)  
 
 ## **📜 Generational Development Plan**  
 
@@ -64,7 +61,6 @@ The **StudentHUB project** is structured into **generations**, each focusing on 
 ### **📱 1st & 2nd Generation (Mobile App Focus)**  
 - **1st Generation (v1.1 - v.x.x)** → **Initial development phase**, setting up the **core app structure, UI, and backend integration**.  
   - This phase follows the **Big User Stories and Detailed User Stories standard**, ensuring structured development.  
-  - 📌 **Refer to:** `StudentHUB-Project/Student-HUB Project ITR0 (copy 1.1).pdf` [ITR0](Student-HUB%20Project%20ITR0(copy%201.1).pdf) for detailed planning and breakdown of features.  
   - The **focus is on completing core functionalities** before expanding further in later generations.    
 - **2nd Generation (v2.1 - v.x.x)** → **Advanced mobile app development**, focusing on making the app **production-ready** for **millions of users**.  
 - 🚀 **Once the mobile app is complete (App Store-ready), development shifts to the website.**  
