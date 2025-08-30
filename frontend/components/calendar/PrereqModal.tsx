@@ -16,8 +16,9 @@ interface PrereqModalProps {
   preReq: Course[][]
 }
 
-
 export function PrereqModal({ visible, onClose, preReq }: PrereqModalProps) {
+  const hasPreReqs = preReq && preReq.length > 0
+
   return (
     <Modal
       visible={visible}
@@ -28,15 +29,30 @@ export function PrereqModal({ visible, onClose, preReq }: PrereqModalProps) {
       <View style={styles.overlay}>
         <View style={styles.box}>
           <Text style={styles.title}>Prerequisites</Text>
-          {preReq.map((group, i) => {
-             const codes = group.map(c => c.programCode).join(' OR ')
-             return (
-               <Text key={i} style={styles.line}>
-                 • {codes}
-               </Text>
-             )
-          })}
-          <Pressable style={styles.closeBtn} onPress={onClose}>
+
+          {hasPreReqs ? (
+            preReq.map((group, i) => {
+              const codes = group.map(c => c.programCode).join(' OR ')
+              return (
+                <View key={i} style={styles.card}>
+                  <Text style={styles.code}>{codes}</Text>
+                </View>
+              )
+            })
+          ) : (
+            <Text style={styles.emptyText}>
+              No prerequisites for this course.
+            </Text>
+          )}
+
+          {/* Close button */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.closeBtn,
+              pressed && { opacity: 0.7 }
+            ]}
+            onPress={onClose}
+          >
             <Text style={styles.closeText}>Close</Text>
           </Pressable>
         </View>
@@ -53,34 +69,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   box: {
-    width: '80%',
+    width: '85%',
     backgroundColor: '#1E1E1E',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
   },
   title: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
-    marginBottom: 12,
+    marginBottom: 16,
     textAlign: 'center',
   },
-  groupText: {
-    color: '#DDD',
-    marginBottom: 8,
+  // Modern card style (matches calendar cards)
+  card: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  code: {
+    color: '#bb86fc', // purple highlight for codes
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  emptyText: {
+    color: '#666',
     fontSize: 14,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   closeBtn: {
-    marginTop: 12,
+    marginTop: 16,
     alignSelf: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    backgroundColor: '#9b59b6', // purple accent
+    borderRadius: 25,
   },
   closeText: {
-    color: '#AAA',
-    fontSize: 14,
-  },
-  line: {
     color: '#fff',
-    fontSize: 14,
-    marginBottom: 8,
+    fontSize: 15,
+    fontWeight: '600',
   },
 })

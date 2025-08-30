@@ -31,12 +31,12 @@ describe("CalendarScreen Component", () => {
   test("renders all weekdays correctly (inside calendar modal)", async () => {
     render(<CalendarScreen />);
 
-    fireEvent.press(screen.getByText("📅 Plot Calendar")); // ✅ Open the calendar
+    fireEvent.press(screen.getByText("📅 Plot Calendar")); // Open the calendar
 
     await waitFor(() => {
       const days = ["Mon", "Tue", "Wen", "Thur", "Fri"];
       days.forEach((day) => {
-        expect(screen.getByText(day)).toBeTruthy(); // ✅ Now checks inside modal
+        expect(screen.getByText(day)).toBeTruthy(); // Now checks inside modal
       });
     });
   });
@@ -94,7 +94,7 @@ describe("CalendarScreen Component", () => {
   
     render(<CalendarScreen />);
   
-    // ✅ Wait for UI to update
+    // Wait for UI to update
     await waitFor(() => screen.getByText("EECS1000 | Mon 10:00"));
   
     fireEvent.press(screen.getByText("+ Add Course")); // Open modal
@@ -107,7 +107,7 @@ describe("CalendarScreen Component", () => {
       fireEvent.press(screen.getByText("Add Course"));
     });
   
-    // ✅ Debug logs
+    // Debug logs
     console.log("Mocked alert calls:", (global.alert as jest.Mock).mock.calls);
   
     await waitFor(() => {

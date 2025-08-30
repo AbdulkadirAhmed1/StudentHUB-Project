@@ -71,5 +71,5 @@ const styles = StyleSheet.create({
   gray: { color:'#666' },
   selectedDay: { backgroundColor:'#fff' },
   selectedText: { color:'#FFF', fontWeight:'700' },
-  dot: {width: 6,height: 6,borderRadius: 3,backgroundColor: '#00A3FF', marginTop: 4,},
+  dot: {width: 6,height: 6,borderRadius: 3,backgroundColor: '#9b59b6', marginTop: 4,},
 })

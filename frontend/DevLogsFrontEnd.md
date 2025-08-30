@@ -416,6 +416,8 @@
 
 *This release completes the Calendar’s scheduling flow, from empty states through multi-course management and prerequisite inspection.*  
 
+---
+
 ### Log 1.12 – 8/25/2025
 
 This entry represents several weeks of progress across the frontend. Since the previous log (1.11), we have moved from feature prototyping into a phase of **refinement, modularization, and design polish**. This is the longest entry so far because it consolidates multiple iterations: the deep restructuring of the Calendar feature, persistent data storage per user, and the complete design and implementation of the Profile page. It’s equivalent to multiple dev logs merged into one.
@@ -451,7 +453,10 @@ This entry represents several weeks of progress across the frontend. Since the p
 ---
 
 - **Profile Page Implementation & Enhancements**
-  - The Profile Page was created from scratch to give StudentHub users a sense of identity within the app. Instead of dumping user data inside the tabs (previously just `index.tsx`), we built a **dedicated route** and **modular components**.
+  - The Profile Page was created from scratch to give StudentHub users a sense of identity within the app. Instead of dumping user data inside the tabs (previously just `index.tsx`), we built a **dedicated route** and **modular components**. 
+  
+  ![Early Profile Look](https://i.imgur.com/6Oiiycz.png)
+  
   - **Component Breakdown**
     - `ProfileHeader.tsx` → A custom header where the focus is on the “Profile” title. The back arrow and settings icon are intentionally smaller and lighter gray to reduce visual dominance. Both are animated with Reanimated spring effects, providing tactile bounce feedback.
     - `ProfileAvatar.tsx` → A circular avatar with a default person icon and a pencil overlay for editing. Pressing it triggers a spring bounce animation, making it feel like a real interactive control. The yellow accent ties into the app’s branding.
@@ -507,3 +512,91 @@ This entry represents several weeks of progress across the frontend. Since the p
 ---
 
 *This log consolidates several weeks of work since Log 1.11. It documents the transformation of the Calendar into a modular, persistent, and user-friendly planner, alongside the creation of a polished, animated Profile Page. Together, these changes push StudentHub closer to a production-ready app. This entry is intentionally long — three logs’ worth of updates — to reflect the depth and breadth of the progress made during this period.*
+
+--- 
+
+### Log 1.13 – 8/30/2025  
+
+- **New Login Page (Unfilled State)**  
+  - Modernized input fields with rounded pill design, icons for username/password, and gradient register button.  
+  - Default placeholders are subtle gray, user input is highlighted in yellow for clarity.  
+  - Cancel button remains minimalist beneath Register.  
+  - ![New Login Page Unfilled](https://i.imgur.com/wOag27c.png)  
+
+- **New Login Page (Filled State)**  
+  - Entered text displays in strong yellow against dark gray background.  
+  - Inputs align consistently, icons remain subdued gray to avoid distraction.  
+  - Ensures users immediately see what fields are active.  
+  - ![New Login Page Filled](https://i.imgur.com/ctupp1r.png)  
+
+- **New Register Page (Unfilled State)**  
+  - Modularized register form into its own components (`UsernameInput`, `PasswordInput`, `YearDropdown`, `DepartmentDropdown`, `MajorInput`, `CancelModal`, `RegisterButtons`).  
+  - Dropdowns now show clean placeholder text ("Select Year", "Select Department") until a value is chosen.  
+  - Cancel button triggers confirmation modal only if form data has been modified.  
+  - ![New Register Page Unfilled](https://i.imgur.com/bQpq4bl.png)  
+
+- **New Register Page (Filled State)**  
+  - Yellow input highlights for typed/selected values; placeholders remain gray.  
+  - Dropdowns behave consistently with login inputs and support reset back to placeholders.  
+  - Cancel modal warning is subtle and modern, using black/yellow theme.  
+  - ![New Register Page Filled](https://i.imgur.com/lVQPY0f.png)  
+
+- **Register Cancel Confirmation**  
+  - When cancel is pressed and fields are dirty, modal appears asking: *“Are you sure you want to cancel? All entered data will be cleared.”*  
+  - Options: **Keep Editing** (gray button) or **Yes, Clear** (yellow button).  
+  - Prevents accidental data loss while maintaining subtle design.  
+  - ![Cancel Registration](https://i.imgur.com/MrK1q40.png)  
+
+- **Register Page with New Dropdowns**  
+  - Both Year and Department dropdowns default to placeholder values.  
+  - User can unselect back to placeholder, keeping state clean.  
+  - Text styles: yellow for selected values, gray italic for placeholder.  
+  - ![Register Dropdowns](https://i.imgur.com/bIaYFX2.png)  
+
+- **Course Page: Add Course Modal (No Department Selected)**  
+  - Modal shows “Select Department” dropdown only.  
+  - Search bar and courses list remain hidden until a department is selected.  
+  - Below, a centered italic message reads: *“Select a department.”*  
+  - ![Add Course No Department](https://i.imgur.com/fLYcU5v.png)  
+
+- **Course Page: Add Course Modal (Department Selected – Unfiltered)**  
+  - After choosing a department, all courses from that department are listed (max 20 at once).  
+  - Search bar appears above the list for quick filtering.  
+  - Shows all relevant courses by default, making browsing possible while keeping search optional.  
+  - ![Add Course Unfiltered](https://i.imgur.com/OgKSLYO.png)  
+
+- **Course Page: Add Course Modal (Department Selected – Filtered)**  
+  - Searching filters the list live by course code (case-insensitive).  
+  - If no matches are found, modal displays *“No courses found.”*  
+  - Smooth experience balancing browsing and targeted searching.  
+  - ![Add Course Filtered](https://i.imgur.com/POrhYHf.png)  
+
+- **Course Page New Color Visuals**  
+  - Cards use consistent dark background (`#2C2C2C`) with subtle borders and purple highlights.  
+  - Add Course and Pre-Req modals align visually with same style guide.  
+  - ![Course Color Visuals](https://i.imgur.com/W3p1fvh.png)  
+
+- **Course Card with Delete Option**  
+  - Each scheduled course card now includes a delete button (UI visible, backend not yet implemented).  
+  - Delete button matches purple accent theme, sitting alongside “View Pre-Reqs”.  
+  - Future implementation will confirm deletion before removing from schedule.  
+  - ![Course Delete](https://i.imgur.com/P2na1HH.png)  
+
+- **Prerequisite Modal (Modernized)**  
+  - Pre-Req groups now displayed in card-like containers similar to course cards.  
+  - Rounded corners, padding, subtle shadows for depth.  
+  - Course codes inside groups highlighted in purple (`#bb86fc`).  
+  - Empty state: *“No prerequisites for this course.”*  
+  - ![Prereq Modal](https://i.imgur.com/ezoVRc9.png)  
+
+---
+
+**Summary:**  
+Log 1.13 represents a full **UI/UX overhaul** across Login, Register, and Calendar/Course flows:  
+- Modularized both login and register forms components for maintainability.  
+- Added cancel warning modal with intelligent dirty-checking.  
+- Unified dropdown placeholders and input highlight system.  
+- Improved course add modal with conditional states and capped results.  
+- Modernized prerequisite modal to match overall card style.  
+
+*This log establishes a **consistent design language** (dark theme, yellow/purple highlights, modular cards) across all major flows, creating a polished and professional user experience.*

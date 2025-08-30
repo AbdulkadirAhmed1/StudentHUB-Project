@@ -1,23 +1,22 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   Pressable,
   ScrollView,
   StyleSheet,
+  Animated,
 } from 'react-native';
 import type { Course } from './AddCourseModal';
 import { formatTime } from '../../utils/formatTime';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
-  /** e.g. "8 March 2024" or "Select a date" */
   dateLabel: string;
-  /** list of courses for that day */
   courses: Course[];
-  /** tapped “+ Add Course” */
   onAddPress: () => void;
-  /** tapped “View Pre-Reqs” on a course */
   onViewPrereqs: (preReq: Course[][]) => void;
+  onDelete?: (programCode: string) => void;
 }
 
 export function ScheduledCoursesCard({
@@ -25,6 +24,7 @@ export function ScheduledCoursesCard({
   courses,
   onAddPress,
   onViewPrereqs,
+  onDelete,
 }: Props) {
   return (
     <View style={styles.container}>
@@ -41,37 +41,117 @@ export function ScheduledCoursesCard({
         <ScrollView
           style={styles.list}
           contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}   // ← hide the vertical bar
-          showsHorizontalScrollIndicator={false} // ← if you ever scroll sideways
+          showsVerticalScrollIndicator={false}
         >
           {courses.map((course) => (
-            <View key={course.programCode} style={styles.card}>
-              <Text style={styles.line}>
-                <Text style={styles.label}>Course: </Text>
-                {course.programCode}
-              </Text>
-              <Text style={styles.line}>
-                <Text style={styles.label}>Time: </Text>
-                {formatTime(course.hour, course.minute)}
-              </Text>
-              <Text style={styles.line}>
-                <Text style={styles.label}>Prof: </Text>
-                {course.professor ?? 'N/A'}
-              </Text>
-              <Pressable
-                style={styles.prereqBtn}
-                onPress={() => onViewPrereqs(course.preReq)}
-              >
-                <Text style={styles.prereqText}>View Pre-Reqs</Text>
-              </Pressable>
-            </View>
+            <CourseCard
+              key={course.programCode}
+              course={course}
+              onViewPrereqs={onViewPrereqs}
+              onDelete={onDelete}
+            />
           ))}
         </ScrollView>
       ) : (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Your added courses will appear here.</Text>
+          <Text style={styles.emptyText}>
+            Your added courses will appear here.
+          </Text>
         </View>
       )}
+    </View>
+  );
+}
+
+function CourseCard({ course, onViewPrereqs, onDelete }: any) {
+  const [showDelete, setShowDelete] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeDelete = useRef(new Animated.Value(0)).current;
+
+  const toggleView = () => {
+    if (showDelete) {
+      Animated.parallel([
+        Animated.timing(fadeDelete, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setShowDelete(false));
+    } else {
+      setShowDelete(true);
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeDelete, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  };
+
+  return (
+    <View style={styles.card}>
+      {/* main content */}
+      <Pressable style={StyleSheet.absoluteFill} onPress={toggleView}>
+        <Animated.View style={[styles.absoluteFill, { opacity: fadeAnim }]}>
+          <Text style={styles.line}>
+            <Text style={styles.label}>Course: </Text>
+            {course.programCode}
+          </Text>
+          <Text style={styles.line}>
+            <Text style={styles.label}>Time: </Text>
+            {formatTime(course.hour, course.minute)}
+          </Text>
+          <Text style={styles.line}>
+            <Text style={styles.label}>Prof: </Text>
+            {course.professor ?? 'N/A'}
+          </Text>
+          {/* prereq button stays above card press */}
+          <Pressable
+            style={styles.prereqBtn}
+            onPress={(e) => {
+              e.stopPropagation();
+              onViewPrereqs(course.preReq);
+            }}
+          >
+            <Text style={styles.prereqText}>View Pre-Reqs</Text>
+          </Pressable>
+        </Animated.View>
+      </Pressable>
+
+      {/* delete content */}
+      <Animated.View
+        style={[
+          styles.absoluteFill,
+          { opacity: fadeDelete, justifyContent: 'center', alignItems: 'center' },
+        ]}
+        pointerEvents={showDelete ? 'auto' : 'none'}
+      >
+        {/* tap outside delete button → close */}
+        <Pressable style={StyleSheet.absoluteFill} onPress={toggleView} />
+
+        {/* delete button */}
+        <Pressable
+          style={styles.deleteBtn}
+          onPress={(e) => {
+            e.stopPropagation();
+            onDelete?.(course.programCode);
+          }}
+        >
+          <Ionicons name="trash" size={20} color="white" />
+          <Text style={styles.deleteText}>Delete</Text>
+        </Pressable>
+      </Animated.View>
     </View>
   );
 }
@@ -94,56 +174,60 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: '600',
-    textAlign: 'left',
   },
-  addBtn: {
-    marginLeft: 'auto',
-  },
-  addText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    paddingBottom: 16,
-  },
+  addBtn: { marginLeft: 'auto' },
+  addText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  list: { flex: 1 },
+  listContent: { paddingBottom: 16 },
 
   card: {
     backgroundColor: '#2C2C2C',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
+    minHeight: 100,
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
-  line: {
-    color: '#fff',
-    fontSize: 14,
-    marginBottom: 4,
+  absoluteFill: {
+    ...StyleSheet.absoluteFillObject,
+    padding: 12,
   },
-  label: {
-    fontWeight: '600',
-  },
+  line: { color: '#fff', fontSize: 14, marginBottom: 4 },
+  label: { fontWeight: '600' },
 
   prereqBtn: {
-    marginTop: 8,
-    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 12,
+    bottom: 12,
+    zIndex: 999,
+    elevation: 999,
   },
-  prereqText: {
-    color: '#00A3FF',
-    fontSize: 14,
+  prereqText: { color: '#9b59b6', fontSize: 14 },
+
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#9b59b6', // new purple color
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 30,           // make it pill-shaped like Close
+    zIndex: 1000,
+    elevation: 1000,
   },
+  deleteText: {
+    color: '#fff',
+    marginLeft: 8,
+    fontWeight: '600',
+    fontSize: 14,               // slightly bigger for balance
+  },
+
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 20,     // adjust as needed
+    paddingTop: 20,
   },
-  emptyText: {
-    color: '#666',
-    fontSize: 16,
-    fontStyle: 'italic',
-  },
+  emptyText: { color: '#666', fontSize: 16, fontStyle: 'italic' },
 });
