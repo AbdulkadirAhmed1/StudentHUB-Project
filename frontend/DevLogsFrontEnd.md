@@ -600,3 +600,25 @@ Log 1.13 represents a full **UI/UX overhaul** across Login, Register, and Calend
 - Modernized prerequisite modal to match overall card style.  
 
 *This log establishes a **consistent design language** (dark theme, yellow/purple highlights, modular cards) across all major flows, creating a polished and professional user experience.*
+
+### Log 1.13.1 – 9/8/2025  
+
+- **Modernized Error Alerts**  
+  - Replaced all default `alert()` calls in login and register flows with **custom modal alerts** that match the app’s black/yellow theme.  
+  - These alerts now appear centered with rounded dark backgrounds, yellow titles, and clear action buttons.  
+  - ![Missing Username or Password](https://i.imgur.com/F2FvKqg.png)  
+  - ![All Fields Required](https://i.imgur.com/H9tMZFW.png)  
+
+- **Error Types Covered**  
+  - **Login**: Missing username or password → shows custom modal.  
+  - **Register**: Missing fields, invalid year range, or backend failure → all show consistent modal UI.  
+  - **General Errors**: “Something went wrong” now also uses this unified style.  
+
+- **Design Consistency**  
+  - Subtle animations and consistent typography unify error handling with other app modals (like Cancel Registration).  
+  - Buttons follow the same scheme: gray for dismiss, yellow for confirm/action.  
+
+---
+
+**Summary:**  
+This was a **small refinement update**, but important for UX consistency. Instead of jarring system alerts, all error handling now uses **modern, branded modals**. It ensures that even validation failures feel polished and cohesive with the rest of StudentHUB’s design language.  
