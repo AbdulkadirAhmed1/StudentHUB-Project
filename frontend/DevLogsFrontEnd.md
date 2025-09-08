@@ -606,7 +606,7 @@ Log 1.13 represents a full **UI/UX overhaul** across Login, Register, and Calend
 - **Modernized Error Alerts**  
   - Replaced all default `alert()` calls in login and register flows with **custom modal alerts** that match the app’s black/yellow theme.  
   - These alerts now appear centered with rounded dark backgrounds, yellow titles, and clear action buttons.  
-  - ![Missing Username or Password](https://imgur.com/a/DfuD0UT)  
+  - ![Missing Username or Password](https://i.imgur.com/jgMkZoO.png)  
   - ![All Fields Required](https://i.imgur.com/mY5tQi8.png)  
 
 - **Error Types Covered**  
