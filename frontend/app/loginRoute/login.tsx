@@ -1,6 +1,6 @@
 // frontend/app/loginRoute/login.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,10 +9,13 @@ import LoginForm from '../../components/login/LoginForm';
 import RegisterForm from '../../components/login/RegisterForm';
 import { useAuth } from '../../components/login/useAuth';
 import LoginHeader from '../../components/login/LoginHeader';
+import CustomAlertModal from '../../components/ui/CustomAlertModal'; // ✅ new
 
 export default function LoginRegisterScreen() {
   const router = useRouter();
   const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   // custom auth hook for login/register logic
   const {
@@ -29,7 +32,7 @@ export default function LoginRegisterScreen() {
     setMajor,
     handleLogin,
     handleRegister,
-  } = useAuth(router);
+  } = useAuth(router, setAlertMessage, setAlertVisible);
 
   // auto-login if user is saved
   useEffect(() => {
@@ -44,7 +47,6 @@ export default function LoginRegisterScreen() {
 
   return (
     <LinearGradient colors={['#2C2C2C', '#000000']} style={styles.outerContainer}>
-      {/* Header — currently logo only, no text */}
       <LoginHeader mode={mode} />
 
       {mode === 'login' ? (
@@ -54,7 +56,11 @@ export default function LoginRegisterScreen() {
           setUsername={setUsername}
           setPassword={setPassword}
           submitLogin={handleLogin}
-          switchToRegister={() => setMode('register')}
+          switchToRegister={() => {
+            setMode('register');
+            setUsername('');
+            setPassword('');
+          }}
         />
       ) : (
         <RegisterForm
@@ -73,6 +79,13 @@ export default function LoginRegisterScreen() {
           switchToLogin={() => setMode('login')}
         />
       )}
+
+      {/* Modern alert modal */}
+      <CustomAlertModal
+        visible={alertVisible}
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
     </LinearGradient>
   );
 }
@@ -83,10 +96,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
   },
 });
