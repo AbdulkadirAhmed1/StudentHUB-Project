@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/profile/ProfileHeader';
 import ProfileAvatar from '../../components/profile/ProfileAvatar';
 import ProfileInfo from '../../components/profile/ProfileInfo';
+import ProfileOptions from '../../components/profile/ProfileOptions'; 
 
 export default function ProfileScreen() {
   return (
@@ -17,7 +18,8 @@ export default function ProfileScreen() {
       <SafeAreaView style={styles.container}>
         <ProfileHeader />
         <ProfileAvatar />
-        <ProfileInfo />
+        <ProfileInfo /> 
+        <ProfileOptions />
       </SafeAreaView>
     </LinearGradient>
   );
