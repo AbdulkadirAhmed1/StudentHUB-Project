@@ -8,6 +8,7 @@ import ProfileHeader from '../../components/profile/ProfileHeader';
 import ProfileAvatar from '../../components/profile/ProfileAvatar';
 import ProfileInfo from '../../components/profile/ProfileInfo';
 import ProfileOptions from '../../components/profile/ProfileOptions'; 
+import ProfileEditButton from '../../components/profile/ProfileEditButton'; 
 
 export default function ProfileScreen() {
   return (
@@ -18,7 +19,8 @@ export default function ProfileScreen() {
       <SafeAreaView style={styles.container}>
         <ProfileHeader />
         <ProfileAvatar />
-        <ProfileInfo /> 
+        <ProfileInfo />  
+        <ProfileEditButton />
         <ProfileOptions />
       </SafeAreaView>
     </LinearGradient>

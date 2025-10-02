@@ -618,7 +618,42 @@ Log 1.13 represents a full **UI/UX overhaul** across Login, Register, and Calend
   - Subtle animations and consistent typography unify error handling with other app modals (like Cancel Registration).  
   - Buttons follow the same scheme: gray for dismiss, yellow for confirm/action.  
 
+--- 
+
+**Summary:**  
+This was a **small refinement update**, but important for UX consistency. Instead of jarring system alerts, all error handling now uses **modern, branded modals**. It ensures that even validation failures feel polished and cohesive with the rest of StudentHUB’s design language.   
+
+### Log 1.14 – 10/3/2025  
+
+- **New Profile Page Redesign**  
+  - Profile page fully restructured with modular components (`ProfileHeader`, `ProfileAvatar`, `ProfileOptions`, `ProfileOptionItem`).  
+  - Unified purple theme across icons, text, and animations for consistency with app-wide design.  
+  - Clean spacing ensures options fill the screen naturally without feeling cluttered.  
+  - ![New Profile Look](https://i.imgur.com/fddqhY8.png)  
+
+- **Profile Option Hover & Press Animations**  
+  - Each option row now animates with 3 synchronized effects:  
+    1. **Divider Line Fill** – top line expands smoothly with accent color.  
+    2. **Arrow Fill** – right-side arrow circle fills from bottom to top with accent color.  
+    3. **Text Fill** – option label fills from right → left, character by character.  
+  - Ensures each interaction feels dynamic and “alive” without overwhelming the user.  
+  - ![Profile Settings Animation](https://i.imgur.com/WAoyzS8.png)  
+
+- **Logout Option (Special Red Animations)**  
+  - Logout retains unique identity with **red animations** instead of purple:  
+    - Red line fill.  
+    - Red arrow circle fill.  
+    - Red text fill (right → left).  
+  - Creates a visual distinction for destructive action, while maintaining consistency with the animation style.  
+  - ![Profile Logout Animation](https://i.imgur.com/DH2JIZY.png)  
+
 ---
 
 **Summary:**  
-This was a **small refinement update**, but important for UX consistency. Instead of jarring system alerts, all error handling now uses **modern, branded modals**. It ensures that even validation failures feel polished and cohesive with the rest of StudentHUB’s design language.  
+Log 1.14 introduces a **modernized interactive profile screen** with coordinated hover/press animations.  
+- Modularized profile options into reusable components with smooth reanimated transitions.  
+- Unified purple accent for all items except logout, which uses a distinct red theme.  
+- Enhanced user experience by combining **line, arrow, and text animations** into a cohesive feedback system.  
+- Logout now clearly communicates its destructive nature while fitting into the overall design system.  
+
+*This log establishes the profile page as a centerpiece of the app’s new animation-driven UX, combining elegance with clear user feedback.*  
