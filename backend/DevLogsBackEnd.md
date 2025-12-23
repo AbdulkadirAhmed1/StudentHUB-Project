@@ -65,3 +65,42 @@ The backend is **hosted on Render**. The live API endpoint can be found in the f
   - Secure all `/api/departments/*` routes via authentication middleware.  
   - Add POST/PUT/DELETE endpoints for departments and courses to allow dynamic updates.  
   - Write unit and integration tests for the new in-memory data layer and routes.
+
+### **Backend v4.0**
+- **New Schedule Management System:**  
+  - Added `routes/schedules.js` to handle CRUD operations for user course schedules.  
+  - Integrated with PostgreSQL via the existing `pool` connection for persistent data storage.  
+  - Implemented endpoints:  
+    - `GET /api/schedules/:userId` → fetches all scheduled courses for a given user.  
+    - `POST /api/schedules` → adds a new course schedule (with user, date, hour, minute, and course code).  
+    - `DELETE /api/schedules/:id` → deletes a schedule entry by its ID.  
+  - Ensured all endpoints return structured JSON responses for frontend compatibility.  
+
+- **Database Update:**  
+  - Added a new `schedules` table linked to the `users` table with foreign key constraints:  
+    ```sql
+    CREATE TABLE schedules (
+      id SERIAL PRIMARY KEY,
+      user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      course_code VARCHAR(50) NOT NULL,
+      description TEXT,
+      hour INT NOT NULL,
+      minute INT NOT NULL,
+      date DATE NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    ```
+
+- **Frontend Integration:**  
+  - `calendar.tsx` now fetches schedules from the backend (`GET /api/schedules/:userId`)  
+    and saves new courses using `POST /api/schedules`.  
+  - Fallback mechanism implemented — if the backend is unreachable,  
+    the app automatically loads from `AsyncStorage`.  
+
+- **Testing & Verification:**  
+  - Verified data persistence on Render PostgreSQL deployment.  
+  - Confirmed backend returns valid JSON responses and works with the frontend Calendar module.  
+
+- **Next Steps:**  
+  - Add `DELETE` integration on frontend to allow users to remove schedules directly.  
+  - Expand `schedules` schema to include professor names and prerequisite linkage.
