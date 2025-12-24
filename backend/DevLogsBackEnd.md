@@ -64,4 +64,53 @@ The backend is **hosted on Render**. The live API endpoint can be found in the f
   - Migrate seeded `departments` & `courses` into real database tables with proper foreign keys.  
   - Secure all `/api/departments/*` routes via authentication middleware.  
   - Add POST/PUT/DELETE endpoints for departments and courses to allow dynamic updates.  
-  - Write unit and integration tests for the new in-memory data layer and routes.
+  - Write unit and integration tests for the new in-memory data layer and routes. 
+
+  ### **Backend v3.1 – Schedule Persistence & Frontend Sync**
+
+- **Schedules Database Integration:**
+  - Designed and added a new `schedules` PostgreSQL table to persist user calendar data.
+  - Each row represents a single scheduled course on a specific date, linked to a user via `user_id`.
+  - Enforced uniqueness constraints to prevent:
+    - Duplicate course entries on the same day.
+    - Time conflicts (same hour/minute on the same date).
+
+- **Schedules API Endpoints:**
+  - Implemented a new router `src/routes/schedules.js` with the following endpoints:
+    - `GET /api/schedules/:userId`  
+      → Returns all scheduled courses for a user, ordered by date and time.
+    - `POST /api/schedules`  
+      → Persists a new scheduled course (date, program code, hour, minute).
+    - `DELETE /api/schedules`  
+      → Removes a scheduled course for a given user/date/program code.
+  - Added conflict detection using PostgreSQL unique constraints and surfaced clear error responses.
+
+- **Frontend ↔ Backend Sync Strategy (Calendar):**
+  - Implemented a **backend-first, offline-safe loading strategy**:
+    - On calendar load, the frontend first attempts to fetch schedules from the backend API.
+    - If the backend returns an empty array or is unreachable, the app safely falls back to AsyncStorage.
+  - Backend results are cached into AsyncStorage after a successful fetch to support offline usage.
+
+- **Date Normalization Fix:**
+  - Identified and resolved a critical mismatch between backend ISO timestamps (`YYYY-MM-DDT00:00:00.000Z`)
+    and frontend calendar keys (`YYYY-MM-DD`).
+  - Normalized backend `schedule_date` values on the frontend using:
+    ```ts
+    schedule_date.split('T')[0]
+    ```
+  - This ensured scheduled courses correctly render in the calendar UI after reloads.
+
+- **Optimistic UI Updates & Logging:**
+  - Calendar additions now update the UI immediately (optimistic update),
+    followed by a backend save request.
+  - Added detailed console logs to trace:
+    - Whether schedules are loaded from backend or AsyncStorage.
+    - When a course is added locally.
+    - When a course is successfully saved to the backend.
+    - When the backend is unavailable and local-only persistence is used.
+
+- **Result:**
+  - Calendar schedules are now:
+    - Persisted across sessions via PostgreSQL.
+    - Offline-resilient via AsyncStorage.
+    - Fully synchronized without breaking existing local behavior.
